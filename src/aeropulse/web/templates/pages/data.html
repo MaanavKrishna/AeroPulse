@@ -3,16 +3,15 @@
 {% block heading %}Data and API{% endblock %}
 {% block lede %}<p class="lede">Everything behind the site, free to reuse under CC BY 4.0. Please credit "AeroPulse" with a link.</p>{% endblock %}
 {% block main %}
-<div class="ground-pad"></div>
 <section class="wrap">
   <div class="section-head"><h2>Downloads</h2>{% if manifest %}<p>Exported {{ manifest.generated_at[:16]|replace("T", " ") }} UTC</p>{% endif %}</div>
   {% if manifest and manifest.files %}
-  <div class="table-scroll" style="max-height:none">
+  <div class="table-scroll table-full">
   <table class="data">
     <thead><tr><th>File</th><th>What it holds</th><th>Rows</th><th>SHA-256</th></tr></thead>
     <tbody>
     {% for f in manifest.files %}
-      <tr><td><a href="/downloads/{{ f.name }}">{{ f.name }}</a></td><td style="text-align:left;white-space:normal">{{ f.description }}</td><td>{{ f.rows }}</td><td><code>{{ f.sha256[:16] }}…</code></td></tr>
+      <tr><td><a href="/downloads/{{ f.name }}">{{ f.name }}</a></td><td class="wrap-cell">{{ f.description }}</td><td>{{ f.rows }}</td><td><code>{{ f.sha256[:16] }}…</code></td></tr>
     {% endfor %}
     </tbody>
   </table>
@@ -25,13 +24,13 @@
 <section class="section wrap">
   <div class="split">
     <div class="stack">
-      <h2 style="font-size:var(--step-2)">API</h2>
+      <h2>API</h2>
       <p>Read-only JSON, no key needed, {{ settings.rate_limit }} requests a minute per address. For bulk use, download the files above instead.</p>
       <div class="snippet"><pre>curl {{ site_url() }}/v1/routes/DEL-BOM?window=8-14</pre></div>
       <p><a href="/api">API guide</a> · <a href="/v1/docs">Full reference</a></p>
     </div>
     <div class="stack">
-      <h2 style="font-size:var(--step-2)">What we do not publish</h2>
+      <h2>What we do not publish</h2>
       <p>Individual fares for single departure dates are not redistributed unless the provider's terms allow it. We publish medians, ranges and indices built from them, which is what the method describes.</p>
       <p>To check our numbers from scratch, <a href="https://github.com/MaanavKrishna/aeropulse">run the code</a> with your own provider key.</p>
     </div>

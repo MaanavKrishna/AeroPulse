@@ -15,9 +15,9 @@ LEVEL_NAMES = ("much lower than usual", "lower than usual", "usual", "higher tha
 CSS = {"ink": "var(--ink)", "muted": "var(--ink-muted)", "band": "var(--band)",
        "grid": "var(--rule)", "accent": "var(--accent)", "sky": "var(--sky)",
        "levels": tuple(f"var({v})" for v in LEVEL_VARS)}
-STANDALONE = {"ink": "#16202C", "muted": "#5A6676", "band": "#D7DDE5", "grid": "#DCE2E9",
-              "accent": "#3036A0", "sky": "#F2F5F8",
-              "levels": ("#1D6FA5", "#6FA3C7", "#B4BDC9", "#DD8A70", "#C4492C")}
+STANDALONE = {"ink": "#111C2B", "muted": "#566373", "band": "#DBE2E9", "grid": "#CFD9E1",
+              "accent": "#1D4F91", "sky": "#F2F5F7",
+              "levels": ("#1F5FA0", "#7EA6CC", "#B2BCC7", "#E09A7E", "#C2401C")}
 VB_W, VB_H = 1000, 100        # stretchable viewBox for page charts
 
 

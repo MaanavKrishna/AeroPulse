@@ -2,8 +2,9 @@
 looks the same everywhere and works with JavaScript switched off."""
 from .base import LEVEL_NAMES, level_index
 from .curves import booking_curve, festival_track
-from .network import network_map, route_flight
+from .network import great_circle_km, network_map, route_flight, short_state
 from .ribbon import ribbon, ribbon_data, ribbon_standalone
 
-__all__ = ["LEVEL_NAMES", "booking_curve", "festival_track", "level_index", "network_map",
+__all__ = ["LEVEL_NAMES", "booking_curve", "festival_track", "great_circle_km", "level_index",
+           "network_map", "short_state",
            "ribbon", "ribbon_data", "ribbon_standalone", "route_flight"]

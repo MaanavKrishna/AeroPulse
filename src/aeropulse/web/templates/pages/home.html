@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %}
 {% import "partials/macros.html" as ui with context %}
-{% block sky_class %}sky-home{% endblock %}
-{% block sky %}
+{% block body_class %}page-home{% endblock %}
+{% block masthead %}
 <section class="hero wrap" aria-labelledby="hero-q" data-hero>
   {% include "partials/hero_section.html" %}
 </section>
@@ -11,14 +11,14 @@
   {% if head.last %}
   <div class="national {{ text.level_class(head.verdict.level) }}">
     <div class="national-copy">
-      <h2 id="h-national" class="kicker">Across India</h2>
+      <h2 id="h-national">Across India</h2>
       <p class="statement"><span class="mark" aria-hidden="true">{{ text.MARKS[head.verdict.level] }}</span>{{ text.index_verdict(head.verdict) }}</p>
-      <dl class="facts facts-inline">
-        <div class="fact"><dt>National index</dt><dd>{{ head.last.value|num1 }}</dd></div>
-        {% if head.change_30d is not none %}<div class="fact"><dt>Last 30 days</dt><dd>{{ "%+.1f"|format(head.change_30d) }}%</dd></div>{% endif %}
-        <div class="fact"><dt>Routes combined</dt><dd>{{ rows|length }}</dd></div>
+      <dl class="strip strip-compact">
+        <div><dt>National index</dt><dd>{{ head.last.value|num1 }}</dd></div>
+        {% if head.change_30d is not none %}<div><dt>Last 30 days</dt><dd>{{ "%+.1f"|format(head.change_30d) }}%</dd></div>{% endif %}
+        <div><dt>Routes</dt><dd>{{ rows|length }}</dd></div>
       </dl>
-      <p class="small muted">{% if head.early %}Early series: {{ head.history_days }} days of data so far. {% endif %}<a href="/methodology#index">What the index is</a></p>
+      <p class="small muted">{% if head.early %}Early series: {{ head.history_days }} days of data so far. {% endif %}100 is the average of the first week of collection. <a href="/methodology#index">How the index works</a></p>
     </div>
     <div class="national-chart">
       {{ charts.ribbon(head.series, typical=head.verdict, uid="nat", axis=True, size="lg",
@@ -35,8 +35,8 @@
 
 <section class="section wrap" aria-labelledby="h-routes">
   <div class="section-head">
-    <h2 id="h-routes">Routes right now</h2>
-    <p>Furthest above usual first. <a href="/routes">All {{ rows|length }} routes</a></p>
+    <h2 id="h-routes">Routes furthest from usual</h2>
+    <p><a href="/routes">All {{ rows|length }} routes</a></p>
   </div>
   {% if rows %}
   <ul class="rows">
@@ -48,19 +48,22 @@
 
 {% if upcoming %}
 <section class="section wrap" aria-labelledby="h-fest">
-  <div class="section-head"><h2 id="h-fest">Festival travel</h2><p>Fares for the busiest travel day, against ordinary weeks.</p></div>
-  <ul class="countdowns">
+  <div class="section-head"><h2 id="h-fest">Festival travel</h2><p>The busiest travel day, against ordinary weeks.</p></div>
+  <table class="board">
+    <caption class="visually-hidden">Upcoming festivals we follow</caption>
+    <thead><tr><th scope="col">Festival</th><th scope="col">Date</th><th scope="col" class="num">Days to go</th><th scope="col" class="num">Routes followed</th></tr></thead>
+    <tbody>
     {% for f in upcoming %}
     {% set days = (f.date - today).days %}
-    <li>
-      <a href="/festivals/{{ f.slug }}">
-        <span class="count"><b>{{ days }}</b> {{ "day" if days == 1 else "days" }}</span>
-        <span class="count-name">to {{ f.name }}</span>
-        <span class="count-date">{{ "Around " if not f.confirmed }}{{ f.date|day_month }} {{ f.date.year }}, {{ f.routes|length }} routes followed</span>
-      </a>
-    </li>
+    <tr>
+      <th scope="row"><a href="/festivals/{{ f.slug }}">{{ f.name }}</a></th>
+      <td>{{ "around " if not f.confirmed }}{{ f.date|day_month }}</td>
+      <td class="num">{{ days }}</td>
+      <td class="num">{{ f.routes|length }}</td>
+    </tr>
     {% endfor %}
-  </ul>
+    </tbody>
+  </table>
 </section>
 {% endif %}
 {% endblock %}

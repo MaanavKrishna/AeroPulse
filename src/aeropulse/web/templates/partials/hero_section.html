@@ -2,12 +2,13 @@
   <div class="hero-copy" data-hero-copy>
     {% include "partials/hero_copy.html" %}
   </div>
-  <div class="hero-map">
+  <div class="hero-chart">
     {{ map|safe }}
-    <ul class="map-key" aria-label="Map colours">
+    <ul class="chart-key" aria-label="How to read the chart">
       <li><span class="key-line lv-0"></span>Cheaper than usual</li>
       <li><span class="key-line lv-2"></span>Usual</li>
       <li><span class="key-line lv-4"></span>Dearer than usual</li>
+      <li class="key-note">Two lines per city pair, one for each direction. Select one to see it.</li>
     </ul>
   </div>
 </div>

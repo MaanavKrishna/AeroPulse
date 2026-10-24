@@ -5,18 +5,21 @@
 {% block description %}{{ copy.headline }}. {{ copy.body }}{% endblock %}
 {% block og %}<meta property="og:image" content="{{ site_url() }}/img/routes/{{ route_slug(route_id) }}.svg?w={{ window }}">
 <link rel="alternate" type="application/atom+xml" title="{{ o.city }} to {{ d.city }} fares" href="/feeds/routes/{{ route_slug(route_id) }}.xml">{% endblock %}
-{% block sky_class %}sky-route{% endblock %}
-{% block sky %}
-<section class="route-sky wrap" aria-labelledby="route-title">
+{% block body_class %}page-route{% endblock %}
+{% block masthead %}
+<section class="route-head wrap" aria-labelledby="route-title">
   <p class="crumbs"><a href="/routes">Routes</a><span aria-hidden="true"> / </span>{{ origin }} to {{ dest }}</p>
-  <div class="route-flight">
-    <div class="end end-o"><span class="code">{{ origin }}</span><span class="city">{{ o.city }}</span></div>
-    {{ charts.route_flight(origin, dest, copy.level)|safe }}
-    <div class="end end-d"><span class="code">{{ dest }}</span><span class="city">{{ d.city }}</span></div>
-  </div>
   <div class="route-titlebar">
     <h1 id="route-title" style="view-transition-name: rt-{{ route_slug(route_id) }}">{{ o.city }} to {{ d.city }}</h1>
     {% if reverse %}<a class="pill-link" href="/routes/{{ route_slug(reverse) }}?w={{ window }}">Flip to {{ d.city }} to {{ o.city }}</a>{% endif %}
+  </div>
+  <div class="route-line">
+    <div class="end"><span class="code">{{ origin }}</span><span class="city">{{ o.airport }}, {{ o.icao }}</span></div>
+    <div class="leg">
+      <span class="leg-km">{{ charts.great_circle_km(origin, dest)|inr }} km great-circle</span>
+      {{ charts.route_flight(verdict.level)|safe }}
+    </div>
+    <div class="end end-d"><span class="code">{{ dest }}</span><span class="city">{{ d.airport }}, {{ d.icao }}</span></div>
   </div>
 
   <nav class="windows" aria-label="How far ahead you are flying">
@@ -29,28 +32,21 @@
     {% endfor %}
   </nav>
 
-  <div class="answer answer-route {{ text.level_class(copy.level) }}">
-    <p class="answer-state"><span class="mark" aria-hidden="true">{{ text.MARKS[copy.level] }}</span>{{ copy.headline }}</p>
+  <div class="answer {{ text.level_class(verdict.level) }}">
+    <p class="answer-line"><span class="mark" aria-hidden="true">{{ text.MARKS[verdict.level] }}</span>{{ text.answer(verdict) }}</p>
+    <p class="answer-context">{{ text.context(verdict, window, o.city, d.city) }}</p>
     {% if latest %}
-    <p class="answer-fare">
-      <span class="fare" data-count-to="{{ latest.price|round|int }}" data-count-from="{{ (verdict.median or latest.price)|round|int }}">₹{{ latest.price|inr }}</span>
-      {% if verdict.pct_vs_median is not none %}<span class="delta">{{ "%+.0f"|format(verdict.pct_vs_median) }}%</span>{% endif %}
-    </p>
+    <dl class="strip">
+      <div><dt>Today</dt><dd>₹{{ latest.price|inr }}</dd></div>
+      <div><dt>Usual, last 90 days</dt><dd>{% if verdict.low %}₹{{ verdict.low|inr }}–{{ verdict.high|inr }}{% else %}Building up{% endif %}</dd></div>
+      <div><dt>Cheapest to dearest date</dt><dd>₹{{ latest.low|inr }}–{{ latest.high|inr }}</dd></div>
+      <div><dt>Departure dates priced</dt><dd>{{ latest.dates }}, seen {{ latest.collection_date|day_month }}</dd></div>
+    </dl>
     {% endif %}
-    <p class="answer-usual">{{ copy.body }}</p>
   </div>
 </section>
 {% endblock %}
 {% block main %}
-{% if latest %}
-<section class="section wrap section-tight" aria-label="Today in numbers">
-  <dl class="facts">
-    <div class="fact"><dt>Usual range, last 90 days</dt><dd>{% if verdict.low %}₹{{ verdict.low|inr }}–₹{{ verdict.high|inr }}{% else %}<small>Building up</small>{% endif %}</dd></div>
-    <div class="fact"><dt>Cheapest and dearest date</dt><dd>₹{{ latest.low|inr }} <small>to</small> ₹{{ latest.high|inr }}</dd></div>
-    <div class="fact"><dt>Based on</dt><dd>{{ latest.dates }} <small>departure dates, seen {{ latest.collection_date|day_month }}</small></dd></div>
-  </dl>
-</section>
-{% endif %}
 
 <section class="section wrap" aria-labelledby="h-history">
   <div class="controls">
@@ -128,12 +124,12 @@
 <section class="section wrap" aria-labelledby="h-how">
   <div class="split">
     <div class="stack">
-      <h2 id="h-how" style="font-size:var(--step-2)">How this is measured</h2>
+      <h2 id="h-how">How this is measured</h2>
       <p>Every day we ask a licensed fare provider for the cheapest economy one-way fare on each departure date over the next two months. For each booking window we take the middle (median) of those cheapest fares. "Usual" is the middle half of the last 90 days.</p>
       <p><a href="/methodology">Read the full method</a></p>
     </div>
     <div>
-      <details class="more" style="margin-top:0;border-top:0">
+      <details class="more more-flush">
         <summary>Route index and uncertainty</summary>
         <p class="small mt-3">The {{ o.city }} to {{ d.city }} index combines all four booking windows (base = 100 at the start of collection). Latest: <strong>{{ index_points[-1].value|num1 if index_points }}</strong>{% if index_points and index_points[-1].low %}, 95% range {{ index_points[-1].low|num1 }}–{{ index_points[-1].high|num1 }}{% endif %}. {{ text.index_verdict(index_verdict, "Fares on this route") }}</p>
         {{ charts.ribbon(index_points, typical=index_verdict, uid="ridx", axis=True, size="sm", label="Route index")|safe }}

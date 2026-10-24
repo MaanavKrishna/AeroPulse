@@ -3,7 +3,6 @@
 {% block heading %}Collection status{% endblock %}
 {% block lede %}<p class="lede">Every collection run for the last {{ st.days }} days. Gaps are shown as gaps; nothing is filled in.</p>{% endblock %}
 {% block main %}
-<div class="ground-pad"></div>
 <section class="wrap">
   {% if not st.providers %}
   <div class="empty"><h2>No collection runs yet</h2><p>Runs appear here after the first <code>aeropulse collect</code>.</p></div>
@@ -18,7 +17,7 @@
     </div>
     <ul class="legend">
       <li><span class="swatch sw-cool"></span>All routes answered</li>
-      <li><span class="swatch" style="background:var(--r-warm-1)"></span>Some routes failed or daily cap reached</li>
+      <li><span class="swatch sw-warm-1"></span>Some routes failed or daily cap reached</li>
       <li><span class="swatch sw-warm"></span>Run failed</li>
       <li><span class="swatch sw-gap"></span>No run</li>
     </ul>
@@ -47,9 +46,9 @@
       <div class="section-head"><h2>Coverage today</h2></div>
       <p>{% if st.coverage is not none %}{{ "%.1f"|format(st.coverage) }}% of the basket's weight was priced for the latest national point.{% else %}No national point yet.{% endif %}</p>
       {% if st.recent_errors %}
-      <h3 class="mt-5" style="font-size:var(--step-1)">Recent provider errors</h3>
+      <h3 class="mt-5 h-sub">Recent provider errors</h3>
       <table class="data mt-3"><thead><tr><th>Route</th><th>Error</th></tr></thead>
-      <tbody>{% for e in st.recent_errors %}<tr><td>{{ e.route_id }}</td><td style="white-space:normal;text-align:left">{{ e.error }}</td></tr>{% endfor %}</tbody></table>
+      <tbody>{% for e in st.recent_errors %}<tr><td>{{ e.route_id }}</td><td class="wrap-cell">{{ e.error }}</td></tr>{% endfor %}</tbody></table>
       {% endif %}
     </div>
   </div>

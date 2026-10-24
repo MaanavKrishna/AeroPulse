@@ -23,6 +23,25 @@ def pct(value: float | None) -> str:
     return f"{abs(value):.0f}%"
 
 
+def answer(v: Verdict) -> str:
+    """The direct answer to "is my fare high?"."""
+    return {"above": "Yes, higher than usual.", "below": "No, lower than usual.",
+            "typical": "No, about usual.", "unknown": "Too early to say."}[v.level]
+
+
+def context(v: Verdict, window: str, origin_city: str, dest_city: str) -> str:
+    """One sentence under the answer, in words; the numbers sit in the strip below it."""
+    lead = f"Cheapest fares from {origin_city} to {dest_city}, flying {window_phrase(window)},"
+    if v.level == "unknown":
+        need = MIN_HISTORY_FOR_VERDICT - v.history_days
+        return (f"We need {MIN_HISTORY_FOR_VERDICT} days of prices before we can say what is "
+                f"usual for {origin_city} to {dest_city}. {need} more to go.")
+    if v.level == "typical":
+        return f"{lead} sit inside the range that has been usual for the last 90 days."
+    word = "above" if v.level == "above" else "below"
+    return f"{lead} are {pct(v.pct_vs_median)} {word} what has been usual for the last 90 days."
+
+
 def short_verdict(v: Verdict) -> str:
     """For list rows: '▲ 31% above usual', '● usual', '▼ 9% below usual'."""
     if v.level == "unknown":

@@ -29,6 +29,7 @@ class Airport:
     aliases: tuple[str, ...]
     lat: float = 0.0
     lon: float = 0.0
+    icao: str = ""
 
 
 @dataclass(frozen=True)
@@ -52,7 +53,7 @@ def airports() -> dict[str, Airport]:
     rows = json.loads((HERE / "airports.json").read_text("utf-8"))
     return {r["iata"]: Airport(r["iata"], r["city"], r["city_hi"], r["airport"], r["state"],
                                tuple(r.get("aliases", [])), r.get("lat", 0.0),
-                               r.get("lon", 0.0)) for r in rows}
+                               r.get("lon", 0.0), r.get("icao", "")) for r in rows}
 
 
 def split_route(route_id: str) -> tuple[str, str]:

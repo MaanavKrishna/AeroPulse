@@ -6,12 +6,11 @@
 {% block heading %}{{ f.name }} {{ f.date.year }} fares{% endblock %}
 {% block lede %}<p class="lede">{{ "Around " if not f.confirmed }}{{ f.date|day_month }} {{ f.date.year }}. We follow the cheapest fare for flying on {{ view.peak|day_month }}, two days before, as it is seen each day, and compare it with ordinary dates three to six weeks earlier booked the same distance ahead.</p>{% endblock %}
 {% block main %}
-<div class="ground-pad"></div>
 <section class="wrap">
   {% if view.routes %}
   {% set top = view.routes[0] %}
   {% if top.latest.pct is not none %}
-  <div class="verdict lv-4" style="margin-top:0">
+  <div class="verdict lv-4">
     <p class="verdict-head"><span class="mark" aria-hidden="true">▲</span>{{ top.name }} is the dearest festival route so far.</p>
     <p class="verdict-body">The cheapest fare for {{ view.peak|day_month }} is {{ top.latest.pct|round|int }}% above ordinary dates at {{ top.latest.days_ahead }} days ahead{% if view.show_prices %} (₹{{ top.latest.fare|inr }}){% endif %}, as seen on {{ top.latest.date|day_month }}.</p>
     <p class="verdict-meta">Cite as: AeroPulse, "{{ f.name }} {{ f.date.year }} fares", {{ site_url() }}/festivals/{{ f.slug }}{% if mode == "demo" %} [DEMO DATA]{% endif %}</p>

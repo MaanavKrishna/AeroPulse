@@ -90,24 +90,40 @@ def hero_context(s: Session, origin: str | None, dest: str | None, window: str |
     return ctx
 
 
+def route_chart(s: Session, rows: list[dict], selected: str | None) -> str:
+    latest = max((r["series"][-1].date for r in rows if r["series"]), default=None)
+    as_of = f"Fares as of {format.day_month(latest)} {latest.year}" if latest else ""
+    if as_of and q.data_mode(s) == "demo":
+        as_of += ", demo data"
+    return charts.network_map(rows, selected=selected, as_of=as_of)
+
+
+def _rows_by_distance_from_usual(s: Session) -> list[dict]:
+    rows = q.route_rows(s)
+    rows.sort(key=lambda r: -(r["verdict"].pct_vs_median or 0))
+    return rows
+
+
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request, s: Session = Depends(db), origin: str | None = None,
          dest: str | None = None, w: str | None = None):
     hero = hero_context(s, (origin or "").upper(), (dest or "").upper(), w)
-    rows = q.route_rows(s)
-    rows.sort(key=lambda r: -(r["verdict"].pct_vs_median or 0))
+    rows = _rows_by_distance_from_usual(s)
     today = dt.date.today()
     upcoming = [f for f in load_festivals() if f.date >= today][:3]
     return render(request, "pages/home.html", s, hero=hero, head=q.headline(s), rows=rows,
                   upcoming=upcoming, today=today, nav="home",
-                  map=charts.network_map(rows, selected=hero.get("route_id")))
+                  map=route_chart(s, rows, hero.get("route_id")))
 
 
 @router.get("/fragments/hero", response_class=HTMLResponse)
 def hero_fragment(request: Request, s: Session = Depends(db), origin: str | None = None,
                   dest: str | None = None, w: str | None = None):
+    """The hero (answer and chart) for another route, swapped in place by app.js."""
     hero = hero_context(s, (origin or "").upper(), (dest or "").upper(), w)
-    return render(request, "partials/hero_copy.html", s, hero=hero)
+    rows = q.route_rows(s)
+    return render(request, "partials/hero_section.html", s, hero=hero,
+                  map=route_chart(s, rows, hero.get("route_id")))
 
 
 # ----------------------------------------------------------------------------- routes

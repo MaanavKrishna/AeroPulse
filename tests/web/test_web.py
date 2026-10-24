@@ -109,20 +109,27 @@ def test_static_assets_are_content_hashed(client):
     assert "immutable" in r.headers["cache-control"]
 
 
-def test_home_map_draws_every_route_as_a_link(client):
+def test_home_chart_draws_every_route_as_a_link(client):
     html = client.get("/?origin=DEL&dest=PAT").text
-    assert html.count('class="arc ') == 40
-    assert html.count('class="arc-hit"') == 40
-    assert 'class="arc lv-4 is-selected"' in html or 'is-selected" d=' in html
-    assert html.count("<animateMotion") == 40
+    assert html.count('class="airway ') == 40
+    assert html.count('class="lane-hit"') == 40
+    assert 'data-route="DEL-PAT"/>' in html and "is-selected" in html
+    assert html.count("<animateMotion") == 1          # one plane, on the selected route
+    assert "km</text>" in html                        # its great-circle distance
+    assert "°N</text>" in html and "°E</text>" in html  # graticule labels
     assert 'href="/routes/del-pat"' in html
 
 
-def test_hero_fragment_is_only_the_answer(client):
-    """The map stays on the page; the fragment swaps the question, picker and answer."""
+def test_hero_fragment_carries_answer_and_chart(client):
     html = client.get("/fragments/hero?origin=BLR&dest=CCU&w=1-7").text
     assert 'data-route="BLR-CCU"' in html and "data-hero-form" in html
-    assert "sky-map" not in html
+    assert "route-chart" in html and "<html" not in html
+
+
+def test_great_circle_distance():
+    from aeropulse.web.charts import great_circle_km
+    assert 1100 < great_circle_km("DEL", "BOM") < 1170
+    assert great_circle_km("DEL", "BOM") == great_circle_km("BOM", "DEL")
 
 
 def test_route_page_has_flight_header(client):
