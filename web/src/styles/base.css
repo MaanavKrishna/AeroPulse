@@ -112,7 +112,7 @@ main { display: block; min-height: 60vh; padding-bottom: var(--s-8); }
   font-weight: 600; min-height: 2.3rem; display: inline-flex; align-items: center; gap: 0.4rem;
   border: 0; background: none; cursor: pointer; z-index: 0; border-radius: 999px; }
 .segments > *:hover { color: var(--ink); }
-.segments > [aria-current="true"], .segments > [aria-pressed="true"] { color: var(--yellow-ink); }
+.segments > [aria-current="true"], .segments > [aria-checked="true"], .segments > [aria-pressed="true"] { color: var(--yellow-ink); }
 .segments .seg-bg { position: absolute; inset: 0; background: var(--yellow); z-index: -1; border-radius: 999px; }
 
 .table { width: 100%; font-size: var(--step--1); }
