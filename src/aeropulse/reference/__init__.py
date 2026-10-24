@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import math
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -123,3 +124,12 @@ def _festivals(path: str) -> tuple[Festival, ...]:
                                   f.get("date_status") == "confirmed",
                                   tuple(f.get("routes", [])))
                          for f in data["festivals"]), key=lambda f: f.date))
+
+
+def great_circle_km(origin: str, destination: str) -> float:
+    """Great-circle distance between two airports, in kilometres (haversine, R = 6371 km)."""
+    a, b = airports()[origin], airports()[destination]
+    p1, p2 = math.radians(a.lat), math.radians(b.lat)
+    dp, dl = p2 - p1, math.radians(b.lon - a.lon)
+    h = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * 6371.0 * math.asin(math.sqrt(h))

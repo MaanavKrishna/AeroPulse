@@ -1,5 +1,5 @@
-"""Read-side questions the site and the API both ask. One implementation, so the page and
-the JSON never disagree."""
+"""Every read the API makes. The website reads only through the API, so a page and its
+JSON can never disagree."""
 from __future__ import annotations
 
 import datetime as dt
@@ -312,14 +312,88 @@ def festival_view(s: Session, slug: str) -> dict | None:
     return {"festival": fest, "peak": peak, "routes": routes, "show_prices": show}
 
 
+WEEKDAYS = ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+
+def weekday_effect(s: Session, route_id: str | None = None, lookback: int = 30) -> list[dict]:
+    """How the cheapest fare differs by departure weekday, as % against that route's median
+    for the same booking distance. Departures 8 to 45 days out, last `lookback` collection
+    days, so last-minute spikes do not dominate."""
+    q = select(Fare.route_id, Fare.days_ahead, Fare.departure_date, Fare.fare).where(
+        Fare.eligible.is_(True), Fare.days_ahead.between(8, 45))
+    last = s.scalar(select(func.max(Fare.collection_date)))
+    if last is None:
+        return []
+    q = q.where(Fare.collection_date >= last - dt.timedelta(days=lookback - 1))
+    if route_id:
+        q = q.where(Fare.route_id == route_id)
+    rows = s.execute(q).all()
+    ref: dict[tuple[str, int], list[float]] = defaultdict(list)
+    for r, d, _, f in rows:
+        ref[(r, d)].append(f)
+    med = {k: statistics.median(v) for k, v in ref.items() if len(v) >= 3}
+    by_wd: dict[int, list[float]] = defaultdict(list)
+    for r, d, dep, f in rows:
+        m = med.get((r, d))
+        if m:
+            by_wd[dep.weekday()].append(f / m - 1)
+    return [{"weekday": WEEKDAYS[i], "pct_vs_typical": statistics.median(by_wd[i]) * 100,
+             "fares": len(by_wd[i])} for i in range(7) if len(by_wd.get(i, [])) >= 5]
+
+
+def movers(s: Session, lag: int = 7, limit: int = 5) -> dict:
+    """Routes whose index moved most over the last `lag` days, up and down."""
+    out = []
+    for route_id in basket_routes(s):
+        pts = series(s, "route", route_id, days=lag + 1)
+        if len(pts) >= lag + 1 and pts[0].value:
+            out.append({"route_id": route_id, "name": route_name(route_id),
+                        "change_pct": (pts[-1].value / pts[0].value - 1) * 100,
+                        "from": pts[0].date.isoformat(), "to": pts[-1].date.isoformat()})
+    out.sort(key=lambda r: r["change_pct"])
+    return {"lag_days": lag, "up": list(reversed(out[-limit:])), "down": out[:limit]}
+
+
+def national_booking_curve(s: Session, lookback: int = 30) -> list[dict]:
+    """Across every route: fare at each booking distance as % of that route's own median,
+    then the median across routes. Answers "how far ahead is usually cheapest" nationally."""
+    last = s.scalar(select(func.max(Fare.collection_date)))
+    if last is None:
+        return []
+    rows = s.execute(select(Fare.route_id, Fare.days_ahead, Fare.fare).where(
+        Fare.eligible.is_(True),
+        Fare.collection_date >= last - dt.timedelta(days=lookback - 1))).all()
+    by_route: dict[str, list[float]] = defaultdict(list)
+    for r, _, f in rows:
+        by_route[r].append(f)
+    route_med = {r: statistics.median(v) for r, v in by_route.items()}
+    per_route_day: dict[tuple[str, int], list[float]] = defaultdict(list)
+    for r, d, f in rows:
+        per_route_day[(r, d)].append(f / route_med[r])
+    by_day: dict[int, list[float]] = defaultdict(list)
+    for (_, d), v in per_route_day.items():
+        if len(v) >= 3:
+            by_day[d].append(statistics.median(v))
+    return [{"days_ahead": d, "pct_vs_route_median": (statistics.median(v) - 1) * 100,
+             "routes": len(v)} for d, v in sorted(by_day.items()) if len(v) >= 5]
+
+
 def window_label(key: str) -> str:
     return WINDOW_BY_KEY[key].label if key in WINDOW_BY_KEY else key
 
 
-def airport_list() -> list[dict]:
-    return [{"iata": a.iata, "city": a.city, "city_hi": a.city_hi, "aliases": list(a.aliases)}
-            for a in sorted(airports().values(), key=lambda a: a.city)]
+def airport_list(s: Session | None = None) -> list[dict]:
+    routes = basket_routes(s) if s is not None else []
+    out = []
+    for a in sorted(airports().values(), key=lambda a: a.city):
+        out.append({"iata": a.iata, "icao": a.icao, "city": a.city, "city_hi": a.city_hi,
+                    "airport": a.airport, "state": a.state, "lat": a.lat, "lon": a.lon,
+                    "aliases": list(a.aliases),
+                    "routes_from": sorted(r for r in routes if r.startswith(a.iata + "-")),
+                    "routes_to": sorted(r for r in routes if r.endswith("-" + a.iata))})
+    return out
 
 
 __all__ = ["WINDOWS", "data_mode", "series", "headline", "route_rows", "booking_curve",
-           "departure_calendar", "status", "festival_view", "product_verdict"]
+           "departure_calendar", "status", "festival_view", "product_verdict", "movers",
+           "weekday_effect", "national_booking_curve"]
