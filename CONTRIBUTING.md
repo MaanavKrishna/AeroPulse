@@ -27,9 +27,9 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 
 ## Common changes
 
-**Add a route:** add a new version to `basket.yaml` (copy the latest, add the route, set
+**Add a route:** add a new version to `src/aeropulse/reference/basket.yaml` (copy the latest, add the route, set
 `valid_from` to a future date). Do not edit an existing version. Add any new airport to
-`src/aeropulse/data/airports.json`.
+`src/aeropulse/reference/airports.json`.
 
 **Add a provider:** implement the `Provider` protocol in `src/aeropulse/providers/base.py`,
 add a policy entry in `providers/policy.py` with `terms_reviewed=False`, register it in

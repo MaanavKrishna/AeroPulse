@@ -1,5 +1,5 @@
-{% extends "base.html" %}
-{% import "_macros.html" as ui with context %}
+{% extends "layouts/base.html" %}
+{% import "partials/macros.html" as ui with context %}
 {% set o = airports()[origin] %}{% set d = airports()[dest] %}
 {% block title %}{{ o.city }} to {{ d.city }} flight fares: today vs usual | AeroPulse{% endblock %}
 {% block description %}{{ copy.headline }}. {{ copy.body }}{% endblock %}
@@ -11,7 +11,7 @@
   <p class="crumbs"><a href="/routes">Routes</a><span aria-hidden="true"> / </span>{{ origin }} to {{ dest }}</p>
   <div class="route-flight">
     <div class="end end-o"><span class="code">{{ origin }}</span><span class="city">{{ o.city }}</span></div>
-    {{ network.route_flight(origin, dest, copy.level)|safe }}
+    {{ charts.route_flight(origin, dest, copy.level)|safe }}
     <div class="end end-d"><span class="code">{{ dest }}</span><span class="city">{{ d.city }}</span></div>
   </div>
   <div class="route-titlebar">
@@ -61,7 +61,7 @@
       {% endfor %}
     </nav>
   </div>
-  {{ svg.ribbon(points, typical=verdict, uid="route", axis=True, size="lg",
+  {{ charts.ribbon(points, typical=verdict, uid="route", axis=True, size="lg",
                 label="Median cheapest fare for flights " ~ text.window_phrase(window) ~ " on " ~ o.city ~ " to " ~ d.city ~ ". " ~ copy.headline ~ ".")|safe }}
   {{ ui.legend() }}
   {{ ui.data_table(points, unit="inr", caption="Median cheapest fare by collection day") }}
@@ -71,7 +71,7 @@
   <div class="split split-wide">
     <div>
       <div class="section-head"><h2 id="h-when">When fares on this route are lowest</h2></div>
-      {{ svg.booking_curve(curve, cheap=stretch, label="Median cheapest fare by days before departure, last 30 days")|safe }}
+      {{ charts.booking_curve(curve, cheap=stretch, label="Median cheapest fare by days before departure, last 30 days")|safe }}
       <p class="mt-5">{{ text.cheapest_sentence(stretch) }}</p>
       <p class="muted small mt-3">Median of the cheapest fare for each departure date, grouped by how far ahead it was seen, over the last 30 days. This describes the recent past, not what fares will do.</p>
     </div>
@@ -85,7 +85,7 @@
         {% set cls = {"above": "lv-4", "below": "lv-0", "typical": "lv-2"}.get(day.level, "lv-u") %}
         <div class="day {{ cls }}{% if day.date.day == 1 %} month-start{% endif %}" role="cell"
              title="{{ day.date|day_month }}: {{ {'above': 'higher than usual', 'below': 'lower than usual', 'typical': 'usual'}.get(day.level, 'no fare found') }}">
-          <span>{{ day.date.day }}{% if day.date.day == 1 %} {{ svg.MONTHS[day.date.month - 1] }}{% endif %}</span>
+          <span>{{ day.date.day }}{% if day.date.day == 1 %} {{ months[day.date.month - 1] }}{% endif %}</span>
           {% if day.fare %}<span class="fare">₹{{ (day.fare / 1000)|round(1) }}k</span>{% endif %}
           <span class="visually-hidden">{{ {'above': 'higher than usual', 'below': 'lower than usual', 'typical': 'usual'}.get(day.level, 'no fare found') }}</span>
         </div>
@@ -136,7 +136,7 @@
       <details class="more" style="margin-top:0;border-top:0">
         <summary>Route index and uncertainty</summary>
         <p class="small mt-3">The {{ o.city }} to {{ d.city }} index combines all four booking windows (base = 100 at the start of collection). Latest: <strong>{{ index_points[-1].value|num1 if index_points }}</strong>{% if index_points and index_points[-1].low %}, 95% range {{ index_points[-1].low|num1 }}–{{ index_points[-1].high|num1 }}{% endif %}. {{ text.index_verdict(index_verdict, "Fares on this route") }}</p>
-        {{ svg.ribbon(index_points, typical=index_verdict, uid="ridx", axis=True, size="sm", label="Route index")|safe }}
+        {{ charts.ribbon(index_points, typical=index_verdict, uid="ridx", axis=True, size="sm", label="Route index")|safe }}
         {{ ui.data_table(index_points, unit="index", caption="Route index by day") }}
       </details>
     </div>

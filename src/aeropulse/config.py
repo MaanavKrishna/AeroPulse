@@ -11,7 +11,6 @@ from pydantic import SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PACKAGE_DIR = Path(__file__).resolve().parent
-REPO_DIR = PACKAGE_DIR.parents[1]
 
 
 class Settings(BaseSettings):
@@ -20,14 +19,15 @@ class Settings(BaseSettings):
 
     #: "development" allows the demo provider. "production" refuses to start with it.
     env: str = "development"
-    database_url: str = f"sqlite:///{REPO_DIR / 'aeropulse.db'}"
+    #: Relative paths resolve against the directory the command runs in.
+    database_url: str = "sqlite:///aeropulse.db"
     site_url: str = "http://localhost:8000"
 
     #: Comma-separated provider names to collect from, in priority order.
     providers: str = "ignav"
-    basket_path: Path = REPO_DIR / "basket.yaml"
-    festivals_path: Path = REPO_DIR / "data" / "festivals.yaml"
-    export_dir: Path = REPO_DIR / "exports"
+    basket_path: Path = PACKAGE_DIR / "reference" / "basket.yaml"
+    festivals_path: Path = PACKAGE_DIR / "reference" / "festivals.yaml"
+    export_dir: Path = Path("exports")
 
     #: Hard cap per provider per day. Collection stops at the cap and says so in the run log.
     max_calls_per_day: int = 200

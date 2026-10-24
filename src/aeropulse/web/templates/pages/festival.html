@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
 {% set f = view.festival %}
 {% block title %}{{ f.name }} {{ f.date.year }} flight fares | AeroPulse{% endblock %}
 {% block description %}How {{ f.name }} travel fares compare with ordinary weeks on India's busiest festival routes.{% endblock %}
@@ -22,7 +22,7 @@
     <article class="fest-route">
       <h3><a href="/routes/{{ route_slug(r.route_id) }}">{{ r.name }}</a></h3>
       <p>{% if r.latest.pct is not none %}{{ r.latest.pct|round|int }}% {{ "above" if r.latest.pct >= 0 else "below" }} ordinary weeks, {{ r.latest.days_ahead }} days ahead{% else %}No comparison yet{% endif %}</p>
-      {{ svg.festival_track(r.points, label=r.name ~ ": festival fare compared with ordinary weeks, by days before departure")|safe }}
+      {{ charts.festival_track(r.points, label=r.name ~ ": festival fare compared with ordinary weeks, by days before departure")|safe }}
     </article>
     {% endfor %}
   </div>

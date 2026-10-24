@@ -24,7 +24,7 @@ Gaps are never back-filled with invented values. A missed day stays missing.
 
 ## Changing the basket
 
-Add a new version to `basket.yaml` with a future `valid_from`. Never edit an old one. After
+Add a new version to `src/aeropulse/reference/basket.yaml` with a future `valid_from`. Never edit an old one. After
 the first day under the new version, check that `index_links.csv` has the link.
 
 ## Rotating secrets

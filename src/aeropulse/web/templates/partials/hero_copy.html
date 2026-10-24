@@ -39,7 +39,7 @@
     {% else %}{{ hero.answer.body }}{% endif %}
   </p>
   {% endif %}
-  {{ svg.ribbon(hero.points, typical=hero.verdict, uid="hero", axis=True, size="md",
+  {{ charts.ribbon(hero.points, typical=hero.verdict, uid="hero", axis=True, size="md",
                 label="Median cheapest fare, " ~ o.city ~ " to " ~ d.city ~ ", flights " ~ text.window_phrase(hero.window) ~ ", last 90 days. " ~ hero.answer.headline ~ ".")|safe }}
   <p class="answer-meta">
     {% if hero.latest %}Median of the cheapest fares on {{ hero.latest.dates }} departure dates, seen {{ hero.latest.collection_date|day_month }}. Last 90 days, grey band is usual.{% endif %}

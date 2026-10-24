@@ -14,7 +14,7 @@
     <p class="verdict-body">{{ copy.body }}</p>
   </div>
   <div class="mt-5">
-    {{ svg.ribbon(points, typical=verdict, uid="embed", axis=True, size="lg", data=False, label=route_name(route_id) ~ ", last 90 days")|safe }}
+    {{ charts.ribbon(points, typical=verdict, uid="embed", axis=True, size="lg", data=False, label=route_name(route_id) ~ ", last 90 days")|safe }}
   </div>
   <p class="attribution">{% if mode == "demo" %}<strong class="warm">Demo data, not real fares.</strong> {% endif %}Source: <a href="{{ site_url() }}/routes/{{ route_slug(route_id) }}?w={{ window }}" target="_top">AeroPulse</a>, CC BY 4.0{% if latest %}. Updated {{ latest.collection_date|day_month }}{% endif %}.</p>
 </body>

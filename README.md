@@ -39,7 +39,7 @@ To collect real fares, put a provider key in `.env` (see [.env.example](.env.exa
 | `src/aeropulse/official/` | DGCA traffic (weights) and MoSPI CPI (benchmark) importers |
 | `src/aeropulse/web/` | Server-rendered site and SVG charts |
 | `src/aeropulse/api/v1/` | Public JSON API |
-| `basket.yaml` | Which routes are priced, by version |
+| `src/aeropulse/reference/` | Airports, the basket (which routes are priced, by version) and festivals |
 | `docs/` | Documentation site (MkDocs) |
 | `deploy/` | Dockerfile, Compose, Caddy, backups |
 

@@ -1,9 +1,9 @@
-{% extends "base.html" %}
-{% import "_macros.html" as ui with context %}
+{% extends "layouts/base.html" %}
+{% import "partials/macros.html" as ui with context %}
 {% block sky_class %}sky-home{% endblock %}
 {% block sky %}
 <section class="hero wrap" aria-labelledby="hero-q" data-hero>
-  {% include "_hero_section.html" %}
+  {% include "partials/hero_section.html" %}
 </section>
 {% endblock %}
 {% block main %}
@@ -21,7 +21,7 @@
       <p class="small muted">{% if head.early %}Early series: {{ head.history_days }} days of data so far. {% endif %}<a href="/methodology#index">What the index is</a></p>
     </div>
     <div class="national-chart">
-      {{ svg.ribbon(head.series, typical=head.verdict, uid="nat", axis=True, size="lg",
+      {{ charts.ribbon(head.series, typical=head.verdict, uid="nat", axis=True, size="lg",
                     label="National airfare index, last 90 days. " ~ text.index_verdict(head.verdict))|safe }}
     </div>
   </div>

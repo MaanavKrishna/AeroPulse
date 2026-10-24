@@ -26,8 +26,7 @@ from ..reference import (
     route_slug,
     split_route,
 )
-from . import text
-from .charts import network, svg
+from . import charts, format, text
 
 router = APIRouter(include_in_schema=False)
 STATIC = PACKAGE_DIR / "web" / "static"
@@ -47,11 +46,11 @@ def static_url(path: str) -> str:
 
 
 env = templates.env
-env.globals.update(static_url=static_url, svg=svg, network=network, text=text, m=m,
+env.globals.update(static_url=static_url, charts=charts, months=format.MONTHS, text=text, m=m,
                    route_name=route_name,
                    route_slug=route_slug, airports=airports, windows=m.WINDOWS,
                    site_url=lambda: get_settings().site_url.rstrip("/"))
-env.filters.update(inr=svg.inr, day_month=svg.day_month,
+env.filters.update(inr=format.inr, day_month=format.day_month,
                    pct=lambda v: "" if v is None else f"{v:+.1f}%",
                    num1=lambda v: "" if v is None else f"{v:.1f}")
 
@@ -99,16 +98,16 @@ def home(request: Request, s: Session = Depends(db), origin: str | None = None,
     rows.sort(key=lambda r: -(r["verdict"].pct_vs_median or 0))
     today = dt.date.today()
     upcoming = [f for f in load_festivals() if f.date >= today][:3]
-    return render(request, "home.html", s, hero=hero, head=q.headline(s), rows=rows,
+    return render(request, "pages/home.html", s, hero=hero, head=q.headline(s), rows=rows,
                   upcoming=upcoming, today=today, nav="home",
-                  map=network.network_map(rows, selected=hero.get("route_id")))
+                  map=charts.network_map(rows, selected=hero.get("route_id")))
 
 
 @router.get("/fragments/hero", response_class=HTMLResponse)
 def hero_fragment(request: Request, s: Session = Depends(db), origin: str | None = None,
                   dest: str | None = None, w: str | None = None):
     hero = hero_context(s, (origin or "").upper(), (dest or "").upper(), w)
-    return render(request, "_hero_copy.html", s, hero=hero)
+    return render(request, "partials/hero_copy.html", s, hero=hero)
 
 
 # ----------------------------------------------------------------------------- routes
@@ -123,7 +122,7 @@ def routes_index(request: Request, s: Session = Depends(db), sort: str = "above"
     else:
         sort = "above"
         rows.sort(key=lambda r: -(r["verdict"].pct_vs_median or 0))
-    return render(request, "routes.html", s, rows=rows, sort=sort, nav="routes")
+    return render(request, "pages/routes.html", s, rows=rows, sort=sort, nav="routes")
 
 
 @router.get("/routes/go")
@@ -153,7 +152,7 @@ def route_page(request: Request, slug: str, s: Session = Depends(db),
     o, d = split_route(route_id)
     reverse = f"{d}-{o}"
     window_verdicts = {win.key: q.product_verdict(s, route_id, win.key)[0] for win in m.WINDOWS}
-    return render(request, "route.html", s, route_id=route_id, origin=o, dest=d,
+    return render(request, "pages/route.html", s, route_id=route_id, origin=o, dest=d,
                   window=w, span=range, verdict=v, latest=latest, points=points,
                   index_points=index_points, curve=curve, stretch=stretch,
                   window_verdicts=window_verdicts,
@@ -184,7 +183,7 @@ def route_image(slug: str, s: Session = Depends(db), w: str = DEFAULT_WINDOW):
     v, latest = q.product_verdict(s, route_id, w)
     pts = q.product_ribbon(s, route_id, w, days=90, replications=100)
     mode = q.data_mode(s)
-    body = svg.ribbon_standalone(
+    body = charts.ribbon_standalone(
         pts, typical=v, title=route_name(route_id),
         subtitle=f"{v.headline}. Flights {text.window_phrase(w)}, last 90 days.",
         footer=("DEMO DATA, NOT REAL FARES. " if mode == "demo" else "")
@@ -199,7 +198,7 @@ def route_embed(request: Request, slug: str, s: Session = Depends(db),
     route_id = _route_or_404(s, slug)
     w = w if w in m.WINDOW_BY_KEY else DEFAULT_WINDOW
     v, latest = q.product_verdict(s, route_id, w)
-    return render(request, "embed.html", s, route_id=route_id, window=w, verdict=v,
+    return render(request, "embed/route.html", s, route_id=route_id, window=w, verdict=v,
                   latest=latest, copy=text.fare_verdict(v, w, route_name(route_id)),
                   points=q.product_ribbon(s, route_id, w, days=90, replications=100))
 
@@ -212,7 +211,7 @@ def festivals_index(request: Request, s: Session = Depends(db)):
     fests = load_festivals()
     views = {f.slug: q.festival_view(s, f.slug) for f in fests
              if -14 <= (f.date - today).days <= 60}
-    return render(request, "festivals.html", s, festivals=fests, views=views, today=today,
+    return render(request, "pages/festivals.html", s, festivals=fests, views=views, today=today,
                   nav="festivals")
 
 
@@ -221,7 +220,7 @@ def festival_page(request: Request, slug: str, s: Session = Depends(db)):
     view = q.festival_view(s, slug)
     if view is None:
         raise HTTPException(404, "unknown festival")
-    return render(request, "festival.html", s, view=view, today=dt.date.today(),
+    return render(request, "pages/festival.html", s, view=view, today=dt.date.today(),
                   nav="festivals")
 
 
@@ -229,14 +228,14 @@ def festival_page(request: Request, slug: str, s: Session = Depends(db)):
 
 @router.get("/methodology", response_class=HTMLResponse)
 def methodology(request: Request, s: Session = Depends(db)):
-    return render(request, "methodology.html", s, links=q.links(s), weights=q.weights(s),
+    return render(request, "pages/methodology.html", s, links=q.links(s), weights=q.weights(s),
                   nav="methodology")
 
 
 @router.get("/data", response_class=HTMLResponse)
 def data_page(request: Request, s: Session = Depends(db)):
     from ..pipeline.export import read_manifest
-    return render(request, "data.html", s, manifest=read_manifest(), nav="data")
+    return render(request, "pages/data.html", s, manifest=read_manifest(), nav="data")
 
 
 @router.get("/downloads/{name}")
@@ -252,18 +251,18 @@ def download(name: str):
 
 @router.get("/status", response_class=HTMLResponse)
 def status_page(request: Request, s: Session = Depends(db)):
-    return render(request, "status.html", s, st=q.status(s), nav="status", reasons=REASONS)
+    return render(request, "pages/status.html", s, st=q.status(s), nav="status", reasons=REASONS)
 
 
 @router.get("/about", response_class=HTMLResponse)
 def about(request: Request, s: Session = Depends(db)):
-    return render(request, "about.html", s, policies=POLICIES, never=NEVER_COLLECTED,
+    return render(request, "pages/about.html", s, policies=POLICIES, never=NEVER_COLLECTED,
                   nav="about")
 
 
 @router.get("/api", response_class=HTMLResponse)
 def api_page(request: Request, s: Session = Depends(db)):
-    return render(request, "api.html", s, nav="data")
+    return render(request, "pages/api.html", s, nav="data")
 
 
 # ----------------------------------------------------------------------------- machine
@@ -278,7 +277,7 @@ def route_feed(request: Request, slug: str, s: Session = Depends(db)):
         v = q.verdict([(r.collection_date, r.price) for r in sub])
         entries.append({"date": sub[-1].collection_date,
                         "copy": text.fare_verdict(v, DEFAULT_WINDOW, route_name(route_id))})
-    body = templates.get_template("feed.xml").render(
+    body = templates.get_template("feeds/route.xml").render(
         route_id=route_id, slug=slug, entries=list(reversed(entries)),
         site=get_settings().site_url.rstrip("/"), name=route_name(route_id),
         mode=q.data_mode(s))

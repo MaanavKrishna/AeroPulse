@@ -48,7 +48,7 @@ def import_csv(session: Session, path: str | Path) -> int:
             raise ImportErrorRow(f"line {i}: period must be YYYY-MM or YYYY-Qn, got {period!r}")
         if o not in known or d not in known:
             raise ImportErrorRow(f"line {i}: unknown airport in {o}-{d}; add it to "
-                                 "src/aeropulse/data/airports.json first")
+                                 "src/aeropulse/reference/airports.json first")
         try:
             pax = int(row["passengers"].replace(",", "").strip())
         except ValueError as exc:

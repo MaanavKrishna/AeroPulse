@@ -1,5 +1,9 @@
-"""Reference data: airports, the basket, festivals. Loaded from files, never from the DB,
-so the definition of what is measured lives in version control."""
+"""Reference data: airports, the basket, festivals.
+
+The files live next to this module (airports.json, basket.yaml, festivals.yaml), are
+shipped inside the package, and are never stored in the database, so the definition of
+what is measured lives in version control.
+"""
 from __future__ import annotations
 
 import datetime as dt
@@ -10,7 +14,9 @@ from pathlib import Path
 
 import yaml
 
-from .config import PACKAGE_DIR, get_settings
+from ..config import get_settings
+
+HERE = Path(__file__).resolve().parent
 
 
 @dataclass(frozen=True)
@@ -43,7 +49,7 @@ class Festival:
 
 @lru_cache
 def airports() -> dict[str, Airport]:
-    rows = json.loads((PACKAGE_DIR / "data" / "airports.json").read_text("utf-8"))
+    rows = json.loads((HERE / "airports.json").read_text("utf-8"))
     return {r["iata"]: Airport(r["iata"], r["city"], r["city_hi"], r["airport"], r["state"],
                                tuple(r.get("aliases", [])), r.get("lat", 0.0),
                                r.get("lon", 0.0)) for r in rows}

@@ -16,7 +16,7 @@ anywhere else.
 | `AEROPULSE_ALLOW_UNREVIEWED_TERMS` | `false` | Private trial only; shows a notice on every page |
 | `AEROPULSE_ADMIN_TOKEN` | | Enables `/v1/admin/*` (secret) |
 | `AEROPULSE_RATE_LIMIT` | `120` | API requests per minute per client |
-| `AEROPULSE_BASKET_PATH` | `./basket.yaml` | Basket definition |
-| `AEROPULSE_FESTIVALS_PATH` | `./data/festivals.yaml` | Festival calendar |
+| `AEROPULSE_BASKET_PATH` | `src/aeropulse/reference/basket.yaml` | Basket definition |
+| `AEROPULSE_FESTIVALS_PATH` | `src/aeropulse/reference/festivals.yaml` | Festival calendar |
 | `AEROPULSE_EXPORT_DIR` | `./exports` | Where `aeropulse export` writes |
 | `AEROPULSE_COLLECT_EVERY` | `21600` | Collector loop interval in seconds (Docker only) |

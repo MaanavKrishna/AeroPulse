@@ -14,7 +14,7 @@ import math
 from collections.abc import Iterable
 
 from ...reference import airports, route_name, route_slug, split_route
-from .svg import esc
+from ..format import esc
 
 #: Label offsets (dx, dy, text-anchor) so codes do not collide with arcs or each other.
 LABELS = {

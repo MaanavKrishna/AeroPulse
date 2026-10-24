@@ -32,7 +32,8 @@ aeropulse = "aeropulse.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-aeropulse = ["web/templates/**/*", "web/static/**/*", "db/migrations/**/*", "data/*"]
+aeropulse = ["web/templates/**/*", "web/static/**/*", "db/migrations/**/*", "reference/*.json",
+             "reference/*.yaml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

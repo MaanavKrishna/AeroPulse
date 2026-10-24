@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from ..core.methodology import MIN_HISTORY_FOR_VERDICT, WINDOW_BY_KEY
 from ..core.verdict import Verdict
-from .charts.svg import day_month, inr
+from .format import day_month, inr
 
 MARKS = {"above": "▲", "below": "▼", "typical": "●", "unknown": "○"}
 

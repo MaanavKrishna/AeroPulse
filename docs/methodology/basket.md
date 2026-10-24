@@ -2,7 +2,7 @@
 
 ## The basket
 
-`basket.yaml` lists the routes, in versions:
+`src/aeropulse/reference/basket.yaml` lists the routes, in versions:
 
 ```yaml
 versions:
