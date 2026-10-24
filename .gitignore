@@ -6,10 +6,10 @@ __pycache__/
 *.db
 *.db-journal
 .env
-exports/
-site/
-dist/
-build/
+/exports/
+/site/
+/dist/
+/build/
 *.egg-info/
 .DS_Store
 *.db-wal
