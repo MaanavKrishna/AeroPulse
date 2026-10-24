@@ -1,0 +1,11 @@
+{
+  "origin": "DEL",
+  "destination": "BOM",
+  "dates": [
+    {"departure_date": "2026-10-25", "return_date": null, "price": {"amount": 8459, "currency": "INR", "status": "verified"}},
+    {"departure_date": "2026-10-26", "return_date": null, "price": {"amount": 7219, "currency": "INR", "status": "verified"}},
+    {"departure_date": "2026-10-27", "return_date": null, "price": null},
+    {"departure_date": "2026-10-28", "return_date": null, "price": {"amount": 6399, "currency": "INR", "status": "unverified"}}
+  ],
+  "observed_at": "2026-10-24T06:12:44Z"
+}

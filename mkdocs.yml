@@ -1,0 +1,50 @@
+site_name: AeroPulse docs
+site_description: Open, route-level index of Indian domestic airfares. Method, data, API, self-hosting.
+repo_url: https://github.com/MaanavKrishna/aeropulse
+edit_uri: edit/main/docs/
+copyright: Text CC BY 4.0. Code AGPL-3.0.
+
+theme:
+  name: material
+  font: false
+  logo: assets/icon.svg
+  favicon: assets/icon.svg
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle: { icon: material/weather-night, name: Dark theme }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle: { icon: material/weather-sunny, name: Light theme }
+  features: [navigation.sections, navigation.top, content.code.copy, search.highlight]
+
+extra_css: [assets/aeropulse.css]
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc: { permalink: true }
+  - pymdownx.superfences
+  - pymdownx.arithmatex: { generic: true }
+
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - Method:
+      - Overview: methodology/index.md
+      - Uncertainty: methodology/uncertainty.md
+      - Basket and weights: methodology/basket.md
+  - Data:
+      - Sources and licences: data/sources.md
+      - Data dictionary: data/dictionary.md
+      - API: data/api.md
+  - Running it:
+      - Self-hosting: operations/self-hosting.md
+      - Configuration: operations/configuration.md
+      - Provider trial: operations/provider-spike.md
+      - Runbook: operations/runbook.md
+  - Contributing:
+      - How to contribute: contributing/index.md
+      - Voice and copy: contributing/voice.md
+      - Ethics: contributing/ethics.md
+  - Changelog: changelog.md

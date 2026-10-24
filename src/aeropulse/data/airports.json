@@ -1,0 +1,15 @@
+[
+  {"iata": "DEL", "city": "Delhi", "city_hi": "दिल्ली", "airport": "Indira Gandhi International", "state": "Delhi", "aliases": ["new delhi", "ndls"]},
+  {"iata": "BOM", "city": "Mumbai", "city_hi": "मुंबई", "airport": "Chhatrapati Shivaji Maharaj International", "state": "Maharashtra", "aliases": ["bombay"]},
+  {"iata": "BLR", "city": "Bengaluru", "city_hi": "बेंगलुरु", "airport": "Kempegowda International", "state": "Karnataka", "aliases": ["bangalore", "bengalooru"]},
+  {"iata": "HYD", "city": "Hyderabad", "city_hi": "हैदराबाद", "airport": "Rajiv Gandhi International", "state": "Telangana", "aliases": ["secunderabad"]},
+  {"iata": "MAA", "city": "Chennai", "city_hi": "चेन्नई", "airport": "Chennai International", "state": "Tamil Nadu", "aliases": ["madras"]},
+  {"iata": "CCU", "city": "Kolkata", "city_hi": "कोलकाता", "airport": "Netaji Subhas Chandra Bose International", "state": "West Bengal", "aliases": ["calcutta"]},
+  {"iata": "GOI", "city": "Goa", "city_hi": "गोवा", "airport": "Dabolim", "state": "Goa", "aliases": ["dabolim", "panaji", "panjim"]},
+  {"iata": "PNQ", "city": "Pune", "city_hi": "पुणे", "airport": "Pune International", "state": "Maharashtra", "aliases": ["poona"]},
+  {"iata": "COK", "city": "Kochi", "city_hi": "कोच्चि", "airport": "Cochin International", "state": "Kerala", "aliases": ["cochin", "ernakulam"]},
+  {"iata": "AMD", "city": "Ahmedabad", "city_hi": "अहमदाबाद", "airport": "Sardar Vallabhbhai Patel International", "state": "Gujarat", "aliases": ["amdavad"]},
+  {"iata": "SXR", "city": "Srinagar", "city_hi": "श्रीनगर", "airport": "Sheikh ul-Alam International", "state": "Jammu and Kashmir", "aliases": ["kashmir"]},
+  {"iata": "PAT", "city": "Patna", "city_hi": "पटना", "airport": "Jay Prakash Narayan International", "state": "Bihar", "aliases": []},
+  {"iata": "LKO", "city": "Lucknow", "city_hi": "लखनऊ", "airport": "Chaudhary Charan Singh International", "state": "Uttar Pradesh", "aliases": []}
+]

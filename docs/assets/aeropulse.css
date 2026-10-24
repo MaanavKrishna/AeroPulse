@@ -1,0 +1,29 @@
+@font-face { font-family: "Anek Latin"; font-weight: 100 800; font-stretch: 75% 125%; font-display: swap;
+  src: url("fonts/anek-latin-latin-wdth-normal.woff2") format("woff2-variations"); }
+@font-face { font-family: "Anek Latin"; font-weight: 100 800; font-stretch: 75% 125%; font-display: swap;
+  src: url("fonts/anek-latin-latin-ext-wdth-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+20A0-20C0; }
+@font-face { font-family: "Source Serif 4"; font-weight: 200 900; font-display: swap;
+  src: url("fonts/source-serif-4-latin-wght-normal.woff2") format("woff2-variations"); }
+
+:root {
+  --md-text-font: "Anek Latin";
+  --md-code-font: ui-monospace, "SF Mono", Menlo, monospace;
+}
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #16202c;
+  --md-primary-bg-color: #f2f5f8;
+  --md-accent-fg-color: #3036a0;
+  --md-typeset-a-color: #3036a0;
+  --md-default-bg-color: #f2f5f8;
+}
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #0e1522;
+  --md-accent-fg-color: #9ba2ff;
+  --md-typeset-a-color: #9ba2ff;
+  --md-default-bg-color: #0e1522;
+}
+.md-typeset { font-size: 0.86rem; line-height: 1.65; }
+.md-typeset h1, .md-typeset h2 { font-weight: 640; letter-spacing: -0.01em; color: inherit; }
+.md-typeset p, .md-typeset li { font-family: "Source Serif 4", Georgia, serif; font-size: 1.05em; }
+.md-header__title { font-stretch: 118%; font-weight: 720; }

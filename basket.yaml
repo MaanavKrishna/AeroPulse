@@ -1,0 +1,58 @@
+# The basket: which routes are priced, and from when.
+#
+# A route is a directed airport pair. Each route is priced in every booking window
+# (see src/aeropulse/core/methodology.py), so one route = four statistical products.
+#
+# Changing this file changes what the index measures. Add a new version instead of
+# editing an old one: the old version must keep running for at least one day after the
+# new one starts, so the two can be chain-linked on a shared day.
+#
+# Route weights come from DGCA passenger traffic once it is imported
+# (`aeropulse dgca-import`). Until then every route weighs the same, and the site says so.
+
+versions:
+  - version: b2026.10
+    valid_from: 2026-10-24
+    routes:
+      # Selected as the busiest domestic city pairs in public DGCA city-pair tables.
+      # Verify against the latest DGCA release with `aeropulse dgca-import` before launch.
+      - DEL-BOM
+      - BOM-DEL
+      - DEL-BLR
+      - BLR-DEL
+      - BOM-BLR
+      - BLR-BOM
+      - DEL-HYD
+      - HYD-DEL
+      - DEL-MAA
+      - MAA-DEL
+      - DEL-CCU
+      - CCU-DEL
+      - BLR-HYD
+      - HYD-BLR
+      - BLR-MAA
+      - MAA-BLR
+      - BOM-HYD
+      - HYD-BOM
+      - BOM-MAA
+      - MAA-BOM
+      - BLR-CCU
+      - CCU-BLR
+      - BOM-CCU
+      - CCU-BOM
+      - DEL-GOI
+      - GOI-DEL
+      - BOM-GOI
+      - GOI-BOM
+      - DEL-PNQ
+      - PNQ-DEL
+      - BLR-COK
+      - COK-BLR
+      - DEL-AMD
+      - AMD-DEL
+      - DEL-SXR
+      - SXR-DEL
+      - DEL-PAT
+      - PAT-DEL
+      - DEL-LKO
+      - LKO-DEL

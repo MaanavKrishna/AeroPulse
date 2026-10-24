@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aeropulse"
+version = "0.1.0"
+description = "Open, route-level index of Indian domestic airfares."
+readme = "README.md"
+license = "AGPL-3.0-only"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.34",
+  "SQLAlchemy>=2.0.36",
+  "pydantic>=2.11",
+  "pydantic-settings>=2.6",
+  "httpx>=0.28",
+  "jinja2>=3.1",
+  "pyyaml>=6",
+  "alembic>=1.14",
+]
+
+[project.optional-dependencies]
+postgres = ["psycopg[binary]>=3.2"]
+dev = ["pytest>=8.3", "ruff>=0.8"]
+
+[project.scripts]
+aeropulse = "aeropulse.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+aeropulse = ["web/templates/**/*", "web/static/**/*", "db/migrations/**/*", "data/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["src/aeropulse/db/migrations/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E702", "E731"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's dependency injection is declared in argument defaults.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Header"]

@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "currency": "inr",
+  "data": [
+    {"origin": "DEL", "destination": "BOM", "origin_airport": "DEL", "destination_airport": "BOM", "price": 5120, "airline": "6E", "flight_number": "2175", "departure_at": "2026-11-03T06:05:00+05:30", "transfers": 0, "duration": 135, "link": "/search/DEL0311BOM1"},
+    {"origin": "DEL", "destination": "BOM", "origin_airport": "DEL", "destination_airport": "BOM", "price": 4890, "airline": "AI", "flight_number": "887", "departure_at": "2026-11-03T21:40:00+05:30", "transfers": 0, "duration": 130, "link": "/search/DEL0311BOM1"},
+    {"origin": "DEL", "destination": "BOM", "origin_airport": "DEL", "destination_airport": "BOM", "price": 5510, "airline": "QP", "flight_number": "1121", "departure_at": "2026-11-04T09:15:00+05:30", "transfers": 0, "duration": 140, "link": "/search/DEL0411BOM1"}
+  ]
+}

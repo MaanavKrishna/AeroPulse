@@ -1,0 +1,30 @@
+# Festivals and holidays shown on the site and used for the festival pages.
+#
+# `date_status: confirmed` only when checked against the Government of India holiday
+# list for that year. Lunar festivals move, and some sources disagree by a day.
+# The site shows unconfirmed dates as "around <date>".
+#
+# `routes` are the routes most associated with festival travel. They are an editorial
+# choice, stated as such on the page.
+
+festivals:
+  - slug: diwali-2026
+    name: Diwali
+    date: 2026-11-08
+    date_status: unconfirmed   # most calendars give 8 Nov; some give 9 Nov
+    routes: [DEL-PAT, DEL-LKO, BOM-DEL, BLR-CCU, DEL-CCU, BOM-CCU, BLR-DEL]
+  - slug: chhath-2026
+    name: Chhath Puja
+    date: 2026-11-15
+    date_status: unconfirmed   # sources give 10 Nov or 15 Nov
+    routes: [DEL-PAT, CCU-DEL, BLR-CCU, BOM-CCU]
+  - slug: christmas-2026
+    name: Christmas and New Year
+    date: 2026-12-25
+    date_status: confirmed
+    routes: [DEL-GOI, BOM-GOI, BLR-COK, DEL-SXR]
+  - slug: holi-2027
+    name: Holi
+    date: 2027-03-22
+    date_status: unconfirmed
+    routes: [DEL-PAT, DEL-LKO, BOM-DEL, BLR-DEL]
