@@ -1,5 +1,8 @@
 # Self-hosting
 
+This is the full deployment with live collection. For a quick hosted preview over demo
+data, see [Hosted preview (Vercel)](vercel.md).
+
 One small VPS is enough: 2 vCPU, 2 GB RAM. The stack in `deploy/compose.yaml` runs:
 
 | Service | Role |

@@ -5,8 +5,8 @@ domestic airfares. It tells travellers whether fares are higher or lower than us
 journalists numbers they can cite, and gives researchers a daily dataset with a published
 method.
 
-- 40 directed routes between India's busiest airports, priced every day in four booking
-  windows (within a week, 1–2 weeks, 2–4 weeks, 1–2 months out)
+- 40 directed routes between 13 of India's busiest airports, priced every day in four
+  booking windows (within a week, 1–2 weeks, 2–4 weeks, 1–2 months out)
 - A national index, route indices and booking-window indices (chain-linked Jevons, with
   bootstrap 95% ranges)
 - "Usual" = the middle half of the last 90 days; no verdict until there are 21 days of history
@@ -24,24 +24,35 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 .venv/bin/aeropulse serve         # http://127.0.0.1:8000
 ```
 
-Or with Docker: `docker compose -f deploy/compose.yaml up`.
+To collect real fares, put a provider key in `.env` (see [.env.example](.env.example)), then
+run `aeropulse collect` and `aeropulse build`.
 
-To collect real fares, put a provider key in `.env` (see [.env.example](.env.example)) and run
-`aeropulse collect`, then `aeropulse build`.
+## Deploy
+
+| Target | What you get | Guide |
+|---|---|---|
+| Docker Compose on a server | Site, API, collector every 6 hours, Postgres, HTTPS | [Self-hosting](docs/operations/self-hosting.md) |
+| Vercel | Hosted preview of the site over a read-only demo snapshot | [Hosted preview](docs/operations/vercel.md) |
 
 ## What's where
 
-| Path | What |
-|---|---|
-| `src/aeropulse/core/` | The method: index, chaining, uncertainty, screening, "usual". Pure functions. |
-| `src/aeropulse/providers/` | Fare APIs (Ignav, Travelpayouts) and the demo generator |
-| `src/aeropulse/pipeline/` | Collect, build, export, rebuild-from-export |
-| `src/aeropulse/official/` | DGCA traffic (weights) and MoSPI CPI (benchmark) importers |
-| `src/aeropulse/web/` | Server-rendered site and SVG charts |
-| `src/aeropulse/api/v1/` | Public JSON API |
-| `src/aeropulse/reference/` | Airports, the basket (which routes are priced, by version) and festivals |
-| `docs/` | Documentation site (MkDocs) |
-| `deploy/` | Dockerfile, Compose, Caddy, backups |
+```
+src/aeropulse/
+  core/        the method: index, chaining, uncertainty, screening, "usual" (pure functions)
+  reference/   airports, the basket (basket.yaml) and festivals (festivals.yaml)
+  providers/   licensed fare APIs (Ignav, Travelpayouts), demo generator, terms policy
+  official/    DGCA traffic and MoSPI CPI importers
+  pipeline/    collect, build, export, rebuild-from-export
+  db/          models, sessions, Alembic migrations
+  queries.py   every read the site and API make
+  web/         server-rendered site: views, text, charts, templates, static
+  api/v1/      public JSON API
+deploy/        Dockerfile, Compose, Caddy, backups, Vercel preview
+docs/          documentation site (MkDocs)
+tests/         mirrors src: core, providers, pipeline, web
+```
+
+More detail in [docs/architecture.md](docs/architecture.md).
 
 ## Check our numbers
 
@@ -52,10 +63,16 @@ aeropulse export --out exports
 aeropulse rebuild exports      # "All N national index points rebuilt exactly"
 ```
 
-## Documentation
+## Development
 
-Method, data dictionary, API, self-hosting and contributing: see [`docs/`](docs/index.md),
-or build the site with `pip install mkdocs-material && mkdocs serve`.
+```bash
+.venv/bin/pytest                  # 76 tests, no network
+.venv/bin/ruff check src tests
+mkdocs serve                      # docs site (pip install mkdocs-material)
+```
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) first, and
+[docs/contributing/design.md](docs/contributing/design.md) before changing anything visual.
 
 ## Licences
 

@@ -19,11 +19,15 @@ def engine_for(url: str) -> Engine:
         kwargs["connect_args"] = {"check_same_thread": False}
     engine = create_engine(url, **kwargs)
     if url.startswith("sqlite"):
+        # A read-only snapshot (mode=ro) cannot switch journal mode; it needs no WAL anyway.
+        read_only = "mode=ro" in url
+
         @event.listens_for(engine, "connect")
         def _pragmas(conn, _):                       # noqa: ANN001
             cur = conn.cursor()
             cur.execute("PRAGMA foreign_keys=ON")
-            cur.execute("PRAGMA journal_mode=WAL")
+            if not read_only:
+                cur.execute("PRAGMA journal_mode=WAL")
             cur.close()
     return engine
 

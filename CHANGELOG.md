@@ -21,18 +21,29 @@ as a public product for everyone.
   the export alone.
 
 ### Site
-- "Night flight" design: every page opens in a twilight sky and comes down through a
-  horizon to the numbers. The home page shows all 40 routes as a live constellation of
-  flight arcs between airports at their real positions, coloured by today's fares against
-  usual, with planes flying them. Pick a route on the map or in the picker and the answer
-  updates in place.
-- Route pages open with the route drawn as a single flight, then the fare ribbon, booking
-  curve, departure calendar, citation, download and embed tools. Festival, status, method,
-  data and about pages share the same sky header.
-- Motion: one arrival sequence per page (airports, arcs, planes; fare counts from usual to
-  today), view transitions between pages and on route changes. Everything stops under
-  reduced motion.
-- Server-rendered; works without JavaScript; light and dark grounds.
+- Design language taken from aeronautical en-route charts: chart paper, ink, hairlines,
+  a latitude/longitude grid. No shadows, gradients, blur or card grids
+  (see docs/contributing/design.md).
+- Home page answers the question in words first ("Yes, higher than usual."), with a ruled
+  facts strip and the fare ribbon. The route chart shows all 40 routes as airways between
+  airport chart symbols (IATA, city, ICAO), coloured by fares against usual, with a km scale
+  bar; the selected route carries its great-circle distance and the only moving plane.
+  No country outline is drawn.
+- Route pages: the leg between two airport symbols with its distance, booking-window tabs,
+  fare ribbon, booking curve, departure calendar, citation, CSV, image, embed and feed.
+- Motion is one draw-in per page plus responses to the reader; it all stops under reduced
+  motion. Server-rendered; works without JavaScript; light and dark themes.
+
+### Code layout
+- Reference data (airports with ICAO codes, basket, festivals) in one `reference` package
+  that ships with the install. API routes in `api/v1/routes.py`. Charts split into
+  `ribbon`, `curves`, `network` and shared `base`; formatting in `web/format.py`.
+  Templates in `layouts/`, `partials/`, `pages/`. Tests mirror the source tree.
+
+### Deployment
+- Docker Compose stack for real collection (`deploy/compose.yaml`).
+- Vercel hosted preview: builds a labelled demo snapshot at deploy time and serves it
+  read-only (`deploy/vercel/`).
 
 ### Removed from the prototype
 - All airline and travel-agency scraping adapters and the robots.txt prober.

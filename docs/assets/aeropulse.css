@@ -11,17 +11,17 @@
   --md-code-font: ui-monospace, "SF Mono", Menlo, monospace;
 }
 [data-md-color-scheme="default"] {
-  --md-primary-fg-color: #16202c;
-  --md-primary-bg-color: #f2f5f8;
-  --md-accent-fg-color: #3036a0;
-  --md-typeset-a-color: #3036a0;
-  --md-default-bg-color: #f2f5f8;
+  --md-primary-fg-color: #111c2b;
+  --md-primary-bg-color: #f2f5f7;
+  --md-accent-fg-color: #1d4f91;
+  --md-typeset-a-color: #1d4f91;
+  --md-default-bg-color: #f2f5f7;
 }
 [data-md-color-scheme="slate"] {
-  --md-primary-fg-color: #0e1522;
-  --md-accent-fg-color: #9ba2ff;
-  --md-typeset-a-color: #9ba2ff;
-  --md-default-bg-color: #0e1522;
+  --md-primary-fg-color: #0d1520;
+  --md-accent-fg-color: #8fb7e8;
+  --md-typeset-a-color: #8fb7e8;
+  --md-default-bg-color: #0d1520;
 }
 .md-typeset { font-size: 0.86rem; line-height: 1.65; }
 .md-typeset h1, .md-typeset h2 { font-weight: 640; letter-spacing: -0.01em; color: inherit; }

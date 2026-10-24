@@ -54,5 +54,6 @@ meant to share one database.
 .venv/bin/ruff check src tests
 ```
 
-Tests never call a real provider. Provider contract tests use fixtures built from each
-provider's published schema.
+Tests mirror the package (`tests/core`, `tests/providers`, `tests/pipeline`, `tests/web`) and
+never call a real provider. Provider contract tests use fixtures built from each provider's
+published schema.

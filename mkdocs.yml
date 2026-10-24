@@ -30,6 +30,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting started: getting-started.md
+  - Architecture: architecture.md
   - Method:
       - Overview: methodology/index.md
       - Uncertainty: methodology/uncertainty.md
@@ -40,11 +41,13 @@ nav:
       - API: data/api.md
   - Running it:
       - Self-hosting: operations/self-hosting.md
+      - Hosted preview (Vercel): operations/vercel.md
       - Configuration: operations/configuration.md
       - Provider trial: operations/provider-spike.md
       - Runbook: operations/runbook.md
   - Contributing:
       - How to contribute: contributing/index.md
       - Voice and copy: contributing/voice.md
+      - Design: contributing/design.md
       - Ethics: contributing/ethics.md
   - Changelog: changelog.md

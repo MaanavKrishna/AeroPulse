@@ -14,9 +14,8 @@ The short version lives in
 
 ## Layout of the code
 
-| Package | Rule |
-|---|---|
-| `core` | Pure functions, no I/O. Every method change happens here, with tests. |
-| `providers` | One module per licensed API; must satisfy `Provider` |
-| `pipeline` | Orchestration: collect, build, export, rebuild |
-| `web`, `api` | Read-only views over `queries.py` |
+See [Architecture](../architecture.md) for the full map. In short: `core` is pure method code,
+`reference` holds the basket and airports, `providers` talk to fare APIs, `pipeline`
+orchestrates, and `web` and `api` only read through `queries.py`.
+
+Before changing anything visual, read [Design](design.md).

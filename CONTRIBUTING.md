@@ -39,8 +39,14 @@ published schema.
 **Change copy:** generated sentences live in `src/aeropulse/web/text.py`. Follow
 `docs/contributing/voice.md`.
 
+**Change the look:** read `docs/contributing/design.md` first. Tokens live in
+`src/aeropulse/web/static/css/tokens.css`; charts in `src/aeropulse/web/charts/`; templates
+are grouped into `layouts/`, `partials/` and `pages/`.
+
+Where everything lives: `docs/architecture.md`.
+
 ## Commits and pull requests
 
 Small, focused commits with a clear message. A pull request should say what changed, why,
-and how you checked it (tests, screenshots for visual changes at 375px and 1280px, light and
+and how you checked it (tests, screenshots for visual changes at 390px and 1440px, light and
 dark).
