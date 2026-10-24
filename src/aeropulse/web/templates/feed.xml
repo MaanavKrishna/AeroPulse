@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ name }} fares | AeroPulse{% if mode == "demo" %} (demo data){% endif %}</title>
+  <link href="{{ site }}/routes/{{ slug }}"/>
+  <link rel="self" href="{{ site }}/feeds/routes/{{ slug }}.xml"/>
+  <id>{{ site }}/routes/{{ slug }}</id>
+  <updated>{{ entries[0].date.isoformat() if entries else "1970-01-01" }}T06:00:00Z</updated>
+  <author><name>AeroPulse</name></author>
+  {% for e in entries %}
+  <entry>
+    <title>{{ e.copy.headline }} ({{ e.date.isoformat() }})</title>
+    <id>{{ site }}/routes/{{ slug }}#{{ e.date.isoformat() }}</id>
+    <link href="{{ site }}/routes/{{ slug }}"/>
+    <updated>{{ e.date.isoformat() }}T06:00:00Z</updated>
+    <summary>{% if mode == "demo" %}DEMO DATA. {% endif %}{{ e.copy.body }}</summary>
+  </entry>
+  {% endfor %}
+</feed>

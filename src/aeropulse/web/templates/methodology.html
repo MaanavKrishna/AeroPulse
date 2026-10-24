@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}How AeroPulse measures airfares | AeroPulse{% endblock %}
+{% block description %}The full method behind the AeroPulse airfare index: what is priced, how the index is built, how "usual" is defined, and what the numbers cannot tell you.{% endblock %}
+{% block main %}
+<section class="page-head wrap">
+  <h1>How it is measured</h1>
+  <p>Method version {{ m.METHODOLOGY_VERSION }}. Every number on the site can be rebuilt from the published data with the open-source code.</p>
+</section>
+<div class="wrap with-toc">
+  <nav class="toc" aria-label="On this page">
+    <strong>On this page</strong>
+    <ol>
+      <li><a href="#plain">In plain words</a></li>
+      <li><a href="#priced">What is priced</a></li>
+      <li><a href="#index">The index</a></li>
+      <li><a href="#weights">Weights and base</a></li>
+      <li><a href="#chain">Changing the basket</a></li>
+      <li><a href="#usual">What "usual" means</a></li>
+      <li><a href="#uncertainty">Uncertainty</a></li>
+      <li><a href="#screening">Which fares are left out</a></li>
+      <li><a href="#revisions">Revisions</a></li>
+      <li><a href="#not">What this is not</a></li>
+      <li><a href="#limits">Known limits</a></li>
+    </ol>
+  </nav>
+  <article class="prose">
+    <h2 id="plain">In plain words</h2>
+    <p class="plain">Every day we ask a licensed fare provider for the cheapest economy one-way fare on every departure date over the next two months, for {{ weights|selectattr("basket_version")|map(attribute="route_id")|unique|list|length or "about 40" }} busy domestic routes. We summarise those fares by how far ahead you are booking, compare them with what is usual for that route, and combine the routes into one national number.</p>
+
+    <h2 id="priced">What is priced</h2>
+    <p>A <em>route</em> is a directed airport pair, such as Delhi (DEL) to Mumbai (BOM). Each route is priced in four booking windows:</p>
+    <table>
+      <thead><tr><th>Window</th><th>Days before departure</th></tr></thead>
+      <tbody>{% for w in m.WINDOWS %}<tr><td>{{ w.label|capitalize }}</td><td>{{ w.first_day }}–{{ w.last_day }}</td></tr>{% endfor %}</tbody>
+    </table>
+    <p>Route × window is one <em>product</em>. Its price on a given day is the <strong>median of the cheapest fares across the departure dates in that window</strong>. On 1 November, the Delhi to Mumbai "1–2 weeks out" price is the median of the cheapest fares for departures on 9–15 November. A product needs at least {{ m.MIN_DATES_PER_PRODUCT_DAY }} priced dates that day, or it is left out.</p>
+    <p>Same-day departures are excluded: providers often have little or stale data for them.</p>
+
+    <h2 id="index">The index</h2>
+    <p>The index is a weighted geometric mean of price relatives (a Jevons index):</p>
+    <p class="formula">Index(t) = 100 × exp( Σ w<sub>i</sub> · ln( P<sub>i</sub>(t) / P<sub>i</sub>(base) ) / Σ w<sub>i</sub> )</p>
+    <p>The geometric form is used because the arithmetic one (Carli) fails the time-reversal test: running it forward then backward over the same two days does not return to where it started. On volatile prices like airfares that error is large. The geometric index is also what makes a daily series chainable.</p>
+    <p>There are three kinds of series: one national index, one per route (all four windows), and one per booking window (all routes). Products missing on a day lower the day's <em>coverage</em>. Below {{ m.COVERAGE_PUBLISH|int }}% coverage a point is marked provisional; below {{ m.COVERAGE_WARN|int }}% it is marked insufficient and not used for verdicts.</p>
+
+    <h2 id="weights">Weights and base</h2>
+    <p>Within a route, the four windows count equally. There is no public data on how far ahead Indian domestic tickets are bought, so any other split would be invented.</p>
+    <p>Across routes, weights come from DGCA passenger traffic for the latest twelve months imported. Until DGCA data is imported every route counts equally, and this page says so below.</p>
+    <p>Each product's base price is its mean over the first {{ m.BASE_DAYS }} days it was priced, so every series starts near 100.</p>
+    {% if weights %}
+    <table>
+      <thead><tr><th>Basket</th><th>Route</th><th>Weight</th><th>Source</th><th>Base days</th></tr></thead>
+      <tbody>
+      {% for w in weights[:12] %}<tr><td>{{ w.basket_version }}</td><td>{{ route_name(w.route_id) }}</td><td>{{ "%.2f"|format(w.weight * 100) }}%</td><td>{{ "Equal weights (DGCA not yet imported)" if w.source == "equal" else w.source }}</td><td>{{ w.base_from|day_month if w.base_from }}–{{ w.base_to|day_month if w.base_to }}</td></tr>{% endfor %}
+      </tbody>
+    </table>
+    {% if weights|length > 12 %}<p class="small">Showing 12 of {{ weights|length }}. The full table is in the <a href="/data">dataset</a>.</p>{% endif %}
+    {% endif %}
+
+    <h2 id="chain">Changing the basket</h2>
+    <p>Routes get added and weights get updated. A fixed-base index cannot survive that: change the basket and the level jumps because the composition changed, not because any fare did. So baskets are <strong>chain-linked</strong>. On the first day of a new basket both baskets are priced; the ratio of their levels that day is the link factor, and the new basket continues from the old one's level. Route indices keep their own base prices, so they need no link.</p>
+    {% if links %}
+    <table><thead><tr><th>Series</th><th>From</th><th>To</th><th>Link day</th><th>Factor</th></tr></thead>
+    <tbody>{% for l in links %}<tr><td>{{ l.scope }}</td><td>{{ l.from_version }}</td><td>{{ l.to_version }}</td><td>{{ l.link_period }}</td><td>{{ "%.5f"|format(l.factor) }}</td></tr>{% endfor %}</tbody></table>
+    {% else %}<p>No basket changes yet.</p>{% endif %}
+
+    <h2 id="usual">What "usual" means</h2>
+    <p>"Usual" is the middle half of the previous {{ m.TYPICAL_LOOKBACK }} days: the {{ m.TYPICAL_LOW_PCT }}th to {{ m.TYPICAL_HIGH_PCT }}th percentile, today excluded. Above that band is "higher than usual"; below it, "lower than usual". Percentages compare today with the median of those days.</p>
+    <p>With fewer than {{ m.MIN_HISTORY_FOR_VERDICT }} days of history we give no verdict at all. For the first {{ m.EARLY_SERIES_DAYS }} days the series is labelled "early series".</p>
+    <p>This describes the recent past. It does not say what fares will do next, and nothing on this site does.</p>
+
+    <h2 id="uncertainty">Uncertainty</h2>
+    <p>Each price is a median of a handful of departure dates; a different handful would give a different median. We estimate that with a bootstrap: resample the departure dates in every product-day, rebuild the base prices, the index and the chain from the resample, and repeat {{ m.SE_REPLICATIONS }} times. The spread gives a standard error and a 95% range, drawn as the thickness of the ribbon. The random seed is fixed ({{ m.SE_SEED }}), so anyone can reproduce the ranges exactly.</p>
+    <p>On route pages, the rupee chart's range is the 2.5th to 97.5th percentile of the same kind of resample.</p>
+    <p>The range does <strong>not</strong> cover whether these routes represent all Indian flying. The basket is chosen by traffic, not sampled at random, so that uncertainty cannot be estimated from this data.</p>
+
+    <h2 id="screening">Which fares are left out</h2>
+    <p>Nothing is deleted. A fare that fails a rule is kept, marked ineligible, and counted on the <a href="/status">status page</a>.</p>
+    <ul>
+      <li>Not in rupees.</li>
+      <li>Outside ₹{{ m.PRICE_FLOOR_INR|inr }}–₹{{ m.PRICE_CEILING_INR|inr }} for a one-way domestic economy fare.</li>
+      <li>Departure outside the booking windows.</li>
+      <li>More than {{ m.OUTLIER_Z|int }} robust standard deviations (median absolute deviation) from the other fares for the same route, window and day. The threshold is high on purpose: airfares really are volatile.</li>
+    </ul>
+    <p>When a provider answers in a shape we do not recognise, nothing from that answer is used until the code is updated.</p>
+
+    <h2 id="revisions">Revisions</h2>
+    <p>Series are rebuilt from stored fares after every collection. If a published value changes, for example because a late answer arrived, the old value is kept in a revision log with the reason.</p>
+
+    <h2 id="not">What this is not</h2>
+    <p>This is a <strong>cheapest-available-fare</strong> index. It follows the lowest fare on sale. It is not what the average passenger paid, which is closer to what the Consumer Price Index airfare item measures. The two usually move together but can diverge, for example when cheap seats sell out early. We publish the comparison once enough months of both exist.</p>
+
+    <h2 id="limits">Known limits</h2>
+    <ul>
+      <li>One provider's view of the market. Fares sold only on an airline's own site may be missing.</li>
+      <li>Economy one-way only. No baggage, seat or convenience fees beyond what the provider includes.</li>
+      <li>Goa is measured at Dabolim (GOI) only, not Mopa (GOX).</li>
+      <li>History starts when collection started. Nothing earlier is reconstructed.</li>
+    </ul>
+  </article>
+</div>
+{% endblock %}

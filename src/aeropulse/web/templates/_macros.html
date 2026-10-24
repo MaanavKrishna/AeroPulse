@@ -1,0 +1,47 @@
+{% macro route_row(r) -%}
+{% set v = r.verdict %}
+<li>
+  <a class="row {{ text.level_class(v.level) }}" href="/routes/{{ route_slug(r.route_id) }}">
+    <span class="name">{{ r.name }}<small>{{ r.origin }} to {{ r.destination }}</small></span>
+    <span class="state"><span class="mark" aria-hidden="true">{{ text.MARKS[v.level] }}</span>{{ text.short_verdict(v) }}</span>
+    {{ svg.ribbon(r.series, typical=v, uid="row-" ~ r.route_id, axis=False, size="xs", data=False,
+                  label="Last 90 days on " ~ r.name ~ ": " ~ text.short_verdict(v))|safe }}
+  </a>
+</li>
+{%- endmacro %}
+
+{% macro legend(gap=False) -%}
+<ul class="legend" aria-label="How to read the chart">
+  <li><span class="swatch sw-band"></span>Usual range (middle half of the last 90 days)</li>
+  <li><span class="swatch sw-cool"></span>Lower than usual</li>
+  <li><span class="swatch sw-warm"></span>Higher than usual</li>
+  <li>Ribbon thickness: 95% range of the estimate</li>
+</ul>
+{%- endmacro %}
+
+{% macro data_table(points, unit="index", caption="") -%}
+<details class="more">
+  <summary>Show the numbers as a table</summary>
+  <div class="table-scroll" tabindex="0" role="region" aria-label="{{ caption }}">
+    <table class="data">
+      <caption class="visually-hidden">{{ caption }}</caption>
+      <thead><tr><th scope="col">Date</th><th scope="col">{{ "Median cheapest fare" if unit == "inr" else "Index" }}</th><th scope="col">95% range</th><th scope="col">Prices used</th></tr></thead>
+      <tbody>
+      {% for p in points|reverse %}
+        <tr>
+          <td>{{ p.date|day_month }} {{ p.date.year }}</td>
+          {% if unit == "inr" %}
+          <td>₹{{ p.value|inr }}</td>
+          <td>{% if p.low is not none %}₹{{ p.low|inr }}–₹{{ p.high|inr }}{% else %}–{% endif %}</td>
+          {% else %}
+          <td>{{ p.value|num1 }}</td>
+          <td>{% if p.low is not none %}{{ p.low|num1 }}–{{ p.high|num1 }}{% else %}–{% endif %}</td>
+          {% endif %}
+          <td>{{ p.observations }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</details>
+{%- endmacro %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% import "_macros.html" as ui with context %}
+{% block title %}All routes: Indian domestic fares vs usual | AeroPulse{% endblock %}
+{% block main %}
+<section class="page-head wrap">
+  <h1>Every route we track</h1>
+  <p>{{ rows|length }} routes between India's busiest airports, both directions. Each line shows the last 90 days against that route's own usual range.</p>
+</section>
+<section class="wrap">
+  <div class="controls">
+    <nav class="segments" aria-label="Sort routes">
+      {% for key, label in [("above", "Most above usual"), ("below", "Most below usual"), ("name", "A to Z")] %}
+      <a href="?sort={{ key }}" {% if key == sort %}aria-current="true"{% endif %}>{{ label }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+  {% if rows %}
+  <ul class="rows">{% for r in rows %}{{ ui.route_row(r) }}{% endfor %}</ul>
+  {{ ui.legend() }}
+  {% else %}
+  <div class="empty"><h2>No routes priced yet</h2><p>Routes appear after the first collection run. See <a href="/status">collection status</a>.</p></div>
+  {% endif %}
+</section>
+{% endblock %}

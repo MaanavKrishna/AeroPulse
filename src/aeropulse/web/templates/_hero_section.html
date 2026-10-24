@@ -1,0 +1,29 @@
+<h1 id="hero-q">Is your flight fare high today?</h1>
+  <form class="picker" action="/" method="get" data-hero-form>
+    <div class="field">
+      <label for="f-origin">From</label>
+      <div class="select">
+        <select id="f-origin" name="origin">
+          {% for c in hero.origins %}<option value="{{ c }}" {% if c == hero.origin %}selected{% endif %}>{{ airports()[c].city }} ({{ c }})</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="f-dest">To</label>
+      <div class="select">
+        <select id="f-dest" name="dest">
+          {% for c in hero.dests %}<option value="{{ c }}" {% if c == hero.dest %}selected{% endif %}>{{ airports()[c].city }} ({{ c }})</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="f-when">Flying</label>
+      <div class="select">
+        <select id="f-when" name="w">
+          {% for win in windows %}<option value="{{ win.key }}" {% if win.key == hero.window %}selected{% endif %}>{{ win.label|capitalize }}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-go" type="submit">Check fares</button>
+  </form>
+  {% include "_hero.html" %}

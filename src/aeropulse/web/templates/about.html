@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}About AeroPulse{% endblock %}
+{% block main %}
+<section class="page-head wrap">
+  <h1>About AeroPulse</h1>
+  <p>An open, independent record of what Indian domestic airfares are doing, route by route, for travellers, journalists and researchers.</p>
+</section>
+<div class="wrap">
+  <article class="prose">
+    <h2 id="why">Why it exists</h2>
+    <p>Booking sites tell you the price of one search. Nobody publishes an open, long-running record of how fares move across the country, so every festival season the same question gets answered with press releases. AeroPulse collects fares the same way every day, publishes the method, and lets anyone download the numbers.</p>
+
+    <h2 id="sources">Where fares come from</h2>
+    <p>Only from licensed fare APIs, used with our own key and within their terms:</p>
+    <table>
+      <thead><tr><th>Provider</th><th>Kind</th><th>Terms reviewed</th></tr></thead>
+      <tbody>
+      {% for p in policies.values() %}<tr><td>{% if p.homepage %}<a href="{{ p.homepage }}">{{ p.display_name }}</a>{% else %}{{ p.display_name }}{% endif %}</td><td>{{ p.kind }}</td><td>{{ "Yes" if p.terms_reviewed else "Not yet" }}</td></tr>{% endfor %}
+      </tbody>
+    </table>
+    <p>Passenger traffic for route weights comes from the Directorate General of Civil Aviation. The Consumer Price Index airfare series, used as an outside check, comes from the Ministry of Statistics and Programme Implementation. Both are used under the Government Open Data License – India.</p>
+
+    <h2 id="never">What we never collect</h2>
+    <ul>{% for item in never %}<li>{{ item }}</li>{% endfor %}</ul>
+    <p>The site sets no tracking cookies and loads nothing from third parties. Your recent route choices are remembered only in your own browser.</p>
+
+    <h2 id="demo">Demo data</h2>
+    <p>When the site runs without a provider key it fills itself with synthetic fares, so it can be developed and tested. Those fares are generated, never real, and every page says so in a banner while any of them are present. The public site never mixes demo data with real data, and the software refuses to start in production with the demo generator switched on.</p>
+
+    <h2 id="open">Open source</h2>
+    <p>The code is AGPL-3.0 and the data and text are CC BY 4.0. You can run your own copy, check every number, or <a href="https://github.com/MaanavKrishna/aeropulse">contribute on GitHub</a>.</p>
+  </article>
+</div>
+{% endblock %}

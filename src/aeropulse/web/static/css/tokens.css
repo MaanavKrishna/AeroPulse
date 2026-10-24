@@ -1,0 +1,142 @@
+/* AeroPulse design tokens. "Fare weather": a cool sky, ink, and one diverging scale from
+   blue (cheaper than usual) to vermilion (dearer than usual). Blue/orange stays readable
+   for colour-blind readers; colour is never the only signal. */
+
+@layer tokens, base, layout, components, utilities;
+
+@font-face {
+  font-family: "Anek Latin";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  font-stretch: 75% 125%;
+  src: url("../fonts/anek-latin-latin-wdth-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Anek Latin";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  font-stretch: 75% 125%;
+  src: url("../fonts/anek-latin-latin-ext-wdth-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Source Serif 4";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 900;
+  src: url("../fonts/source-serif-4-latin-wght-normal.woff2") format("woff2-variations");
+}
+@font-face {
+  font-family: "Source Serif 4";
+  font-style: italic;
+  font-display: swap;
+  font-weight: 200 900;
+  src: url("../fonts/source-serif-4-latin-wght-italic.woff2") format("woff2-variations");
+}
+
+@layer tokens {
+  :root {
+    color-scheme: light;
+
+    /* Surfaces and ink */
+    --sky: #f2f5f8;
+    --sky-deep: #e6ebf1;
+    --surface: #ffffff;
+    --ink: #16202c;
+    --ink-muted: #5a6676;
+    --rule: #d6dde5;
+    --rule-strong: #b7c1cd;
+    --band: #d7dde5;
+
+    /* Interaction */
+    --accent: #3036a0;
+    --accent-ink: #ffffff;
+    --accent-soft: #e4e5f6;
+    --focus: #3036a0;
+
+    /* The fare scale: cheap ... usual ... dear */
+    --r-cool-2: #1d6fa5;
+    --r-cool-1: #6fa3c7;
+    --r-even: #b4bdc9;
+    --r-warm-1: #dd8a70;
+    --r-warm-2: #c4492c;
+    /* Text-safe versions (4.5:1 on --sky) */
+    --cool-ink: #1a6497;
+    --warm-ink: #a93a20;
+
+    /* Type */
+    --font-ui: "Anek Latin", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --font-read: "Source Serif 4", "Anek Latin", Georgia, serif;
+    --step--1: 0.84rem;
+    --step-0: 1rem;
+    --step-1: 1.2rem;
+    --step-2: clamp(1.35rem, 1.1rem + 0.9vw, 1.56rem);
+    --step-3: clamp(1.6rem, 1.25rem + 1.4vw, 1.95rem);
+    --step-4: clamp(2rem, 1.4rem + 2.4vw, 2.75rem);
+    --step-5: clamp(2.6rem, 1.2rem + 5.6vw, 4.75rem);
+
+    /* Space (4px grid) */
+    --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.5rem;
+    --s-6: 2rem; --s-7: 3rem; --s-8: 4rem; --s-9: 6rem;
+
+    --page: 75rem;
+    --measure: 68ch;
+    --gutter: clamp(1rem, 0.6rem + 2vw, 2rem);
+    --radius-input: 8px;
+    --dur: 180ms;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --sky: #0e1522;
+      --sky-deep: #131c2c;
+      --surface: #151e2e;
+      --ink: #e5eaf1;
+      --ink-muted: #93a0b2;
+      --rule: #243049;
+      --rule-strong: #34425e;
+      --band: #26324a;
+      --accent: #9ba2ff;
+      --accent-ink: #0e1522;
+      --accent-soft: #232a52;
+      --focus: #b5baff;
+      --r-cool-2: #5fa8db;
+      --r-cool-1: #3d6f95;
+      --r-even: #4a566b;
+      --r-warm-1: #a65a45;
+      --r-warm-2: #f07a5a;
+      --cool-ink: #7cb8e3;
+      --warm-ink: #f39477;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --sky: #0e1522;
+    --sky-deep: #131c2c;
+    --surface: #151e2e;
+    --ink: #e5eaf1;
+    --ink-muted: #93a0b2;
+    --rule: #243049;
+    --rule-strong: #34425e;
+    --band: #26324a;
+    --accent: #9ba2ff;
+    --accent-ink: #0e1522;
+    --accent-soft: #232a52;
+    --focus: #b5baff;
+    --r-cool-2: #5fa8db;
+    --r-cool-1: #3d6f95;
+    --r-even: #4a566b;
+    --r-warm-1: #a65a45;
+    --r-warm-2: #f07a5a;
+    --cool-ink: #7cb8e3;
+    --warm-ink: #f39477;
+  }
+}

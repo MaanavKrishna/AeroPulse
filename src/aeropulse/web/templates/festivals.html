@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Festival airfares in India | AeroPulse{% endblock %}
+{% block description %}How far above ordinary weeks domestic fares are for Diwali, Chhath, Christmas and Holi travel, route by route.{% endblock %}
+{% block main %}
+<section class="page-head wrap">
+  <h1>Festival fares</h1>
+  <p>For each festival we follow the fare for the busiest travel day, two days before, and compare it with ordinary departure dates booked the same distance ahead.</p>
+</section>
+<section class="wrap">
+  <ul class="fest-list">
+    {% for f in festivals %}
+    {% set v = views.get(f.slug) %}
+    {% set days = (f.date - today).days %}
+    <li>
+      <div>
+        <h3><a href="/festivals/{{ f.slug }}">{{ f.name }} {{ f.date.year }}</a></h3>
+        <p class="when">
+          {{ "Around " if not f.confirmed }}{{ f.date|day_month }}{% if days > 0 %}, in {{ days }} days{% elif days == 0 %}, today{% else %}, {{ -days }} days ago{% endif %}.
+          {% if v and v.routes %}{% set top = v.routes[0] %}{% if top.latest.pct is not none %}
+          Highest so far: {{ top.name }}, {{ top.latest.pct|round|int }}% above ordinary weeks.
+          {% endif %}{% elif days > 60 %}Tracking starts about two months before.{% endif %}
+        </p>
+      </div>
+      <a class="btn btn-quiet" href="/festivals/{{ f.slug }}">Open</a>
+    </li>
+    {% endfor %}
+  </ul>
+  <p class="muted small mt-5">Lunar festival dates can move by a day between calendars. Dates we have not confirmed against the official holiday list are shown as "around".</p>
+</section>
+{% endblock %}

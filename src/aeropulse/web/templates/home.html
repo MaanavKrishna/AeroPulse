@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% import "_macros.html" as ui with context %}
+{% block main %}
+<section class="hero wrap" aria-labelledby="hero-q" data-hero>
+  {% include "_hero_section.html" %}
+</section>
+
+<section class="section wrap" aria-labelledby="h-national">
+  <div class="section-head">
+    <h2 id="h-national">Across India</h2>
+    {% if head.last %}<p>All {{ rows|length }} tracked routes combined, {{ head.last.date|day_month }}</p>{% endif %}
+  </div>
+  {% if head.last %}
+  <div class="national {{ text.level_class(head.verdict.level) }}">
+    <div>
+      <p class="big"><span class="mark" aria-hidden="true">{{ text.MARKS[head.verdict.level] }}</span> {{ text.index_verdict(head.verdict) }}</p>
+      <p class="muted small mt-3">
+        {% if head.change_30d is not none %}Over the last 30 days the national index moved {{ head.change_30d|pct }}. {% endif %}
+        {% if head.early %}Early series: {{ head.history_days }} days of data so far.{% endif %}
+        <a href="/methodology#index">What the index is</a>
+      </p>
+    </div>
+    {{ svg.ribbon(head.series, typical=head.verdict, uid="nat", axis=True, size="lg",
+                  label="National airfare index, last 90 days. " ~ text.index_verdict(head.verdict))|safe }}
+  </div>
+  {% else %}
+  <div class="empty">
+    <h2>No prices collected yet</h2>
+    <p>The first collection run will appear here. See <a href="/status">collection status</a>.</p>
+  </div>
+  {% endif %}
+</section>
+
+<section class="section wrap" aria-labelledby="h-routes">
+  <div class="section-head">
+    <h2 id="h-routes">Routes right now</h2>
+    <p>Furthest above usual first. <a href="/routes">All routes</a></p>
+  </div>
+  {% if rows %}
+  <ul class="rows">
+    {% for r in rows[:8] %}{{ ui.route_row(r) }}{% endfor %}
+  </ul>
+  {{ ui.legend() }}
+  {% endif %}
+</section>
+
+{% if upcoming %}
+<section class="section wrap" aria-labelledby="h-fest">
+  <div class="section-head"><h2 id="h-fest">Coming up</h2></div>
+  <ul class="fest-list">
+    {% for f in upcoming %}
+    <li>
+      <div>
+        <h3><a href="/festivals/{{ f.slug }}">{{ f.name }}</a></h3>
+        <p class="when">{{ "Around " if not f.confirmed }}{{ f.date|day_month }} {{ f.date.year }}. Festival fares on {{ f.routes|length }} routes, against ordinary weeks.</p>
+      </div>
+      <a class="btn btn-quiet" href="/festivals/{{ f.slug }}">See {{ f.name }} fares</a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}
