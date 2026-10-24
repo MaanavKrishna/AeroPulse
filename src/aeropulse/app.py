@@ -3,6 +3,7 @@
 The public website is a separate Next.js app (web/) that reads this API."""
 from __future__ import annotations
 
+import hmac
 import time
 from collections import defaultdict, deque
 
@@ -18,13 +19,20 @@ class RateLimit(BaseHTTPMiddleware):
     """Per-IP sliding window on /v1. In memory: fine for one process. Behind a CDN the
     client IP comes from the first X-Forwarded-For hop, which Caddy sets."""
 
-    def __init__(self, app, per_minute: int) -> None:
+    def __init__(self, app, per_minute: int, site_key: str | None = None) -> None:
         super().__init__(app)
         self.per_minute = per_minute
+        self.site_key = site_key.encode() if site_key else None
         self.hits: dict[str, deque] = defaultdict(deque)
+
+    def _is_site(self, request: Request) -> bool:
+        sent = request.headers.get("x-aeropulse-site-key")
+        return bool(self.site_key and sent and hmac.compare_digest(sent.encode(), self.site_key))
 
     async def dispatch(self, request: Request, call_next):
         if not request.url.path.startswith("/v1/") or request.url.path.startswith("/v1/docs"):
+            return await call_next(request)
+        if self._is_site(request):
             return await call_next(request)
         ip = (request.headers.get("x-forwarded-for", "").split(",")[0].strip()
               or (request.client.host if request.client else "unknown"))
@@ -73,7 +81,8 @@ def create_app() -> FastAPI:
     app = FastAPI(title="AeroPulse API", version="0.1.0",
                   summary="Open, route-level index of Indian domestic airfares.",
                   docs_url="/v1/docs", redoc_url=None, openapi_url="/v1/openapi.json")
-    app.add_middleware(RateLimit, per_minute=settings.rate_limit)
+    app.add_middleware(RateLimit, per_minute=settings.rate_limit,
+                       site_key=settings.site_key.get_secret_value() if settings.site_key else None)
     app.add_middleware(SecurityHeaders)
     from .api.files import router as files_router
     from .api.v1 import router as api_router

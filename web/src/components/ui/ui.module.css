@@ -1,0 +1,21 @@
+/* Lists and small shared UI. */
+.rows { list-style: none; margin: 0; padding: 0; }
+.rows li + li { border-top: 1px solid var(--rule); }
+.row { display: grid; align-items: center; gap: var(--s-2) var(--s-5); padding: 0.9rem var(--s-5);
+  grid-template-columns: 7.5rem minmax(9rem, 1fr) minmax(8rem, 1.5fr) 10.5rem; color: inherit; text-decoration: none;
+  transition: background 160ms; }
+.row:hover { background: color-mix(in srgb, var(--yellow) 12%, var(--surface)); }
+.row:hover .name { text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 3px;
+  text-underline-offset: 0.25em; }
+.codes { display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 780; font-stretch: 115%; letter-spacing: 0.02em;
+  font-size: var(--step-1); }
+.codes i { width: 1.1rem; border-top: 2px dotted var(--ink-faint); }
+.name { font-weight: 560; }
+.name small { display: block; color: var(--ink-faint); font-size: var(--step--1); font-weight: 450; }
+.state { text-align: right; }
+@media (max-width: 44rem) {
+  .row { grid-template-columns: auto 1fr; padding-inline: var(--s-4); }
+  .name { display: none; }
+  .state { grid-row: 1; grid-column: 2; }
+  .row > :nth-child(3) { grid-column: 1 / -1; grid-row: 2; }
+}

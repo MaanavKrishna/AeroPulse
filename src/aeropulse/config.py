@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     env: str = "development"
     #: Relative paths resolve against the directory the command runs in.
     database_url: str = "sqlite:///aeropulse.db"
-    site_url: str = "http://localhost:8000"
+    site_url: str = "http://localhost:3000"
 
     #: Comma-separated provider names to collect from, in priority order.
     providers: str = "ignav"
@@ -43,6 +43,9 @@ class Settings(BaseSettings):
     admin_token: SecretStr | None = None
     #: Requests per minute per client IP on the public API.
     rate_limit: int = 120
+    #: Shared secret the website's server sends as X-AeroPulse-Site-Key. Requests that carry
+    #: it skip the per-IP limit, because one site build makes hundreds of calls from one IP.
+    site_key: SecretStr | None = None
 
     @field_validator("env")
     @classmethod

@@ -1,0 +1,64 @@
+/* Line and ribbon charts. Shapes are an SVG that stretches to any width; every label is
+   positioned HTML on top, so text never distorts. */
+
+.plot { position: relative; height: var(--h, 180px); --axis: 0px; --yaxis: 0px; --pad-r: 8px; }
+.sm { --h: 140px; }
+.md { --h: clamp(150px, 10vw + 90px, 220px); }
+.lg { --h: clamp(170px, 12vw + 100px, 270px); }
+.withAxis { --axis: 1.7rem; }
+.withY { --yaxis: 4.4rem; }
+.canvas { position: absolute; left: 0; top: 0; bottom: var(--axis); right: calc(var(--yaxis) + var(--pad-r));
+  outline-offset: 6px; touch-action: pan-y; }
+.canvas[tabindex], .canvas { cursor: crosshair; }
+.canvas > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.overlay { position: absolute; inset: 0; pointer-events: none; }
+.withAxis .overlay { border-bottom: 1px solid var(--rule-strong); }
+.empty { display: grid; place-items: center; border: 1px dashed var(--rule-strong); color: var(--ink-muted); }
+
+.band { fill: var(--band); }
+.line { fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linejoin: round; }
+.gridLine { stroke: var(--rule); stroke-width: 1; }
+.zero { stroke: var(--ink-muted); stroke-dasharray: 4 4; stroke-width: 1; }
+.cheapZone { fill: var(--r-cool-2); opacity: 0.16; }
+.curveArea { fill: var(--yellow); opacity: 0.22; }
+.curveLine { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linejoin: round; }
+.trackArea { fill: var(--r-warm-2); opacity: 0.14; }
+.trackLine { fill: none; stroke: var(--r-warm-2); stroke-width: 2; stroke-linejoin: round; }
+
+.tick { position: absolute; top: calc(100% + 0.35rem); transform: translateX(-50%); white-space: nowrap;
+  font-size: var(--step--1); color: var(--ink-muted); }
+.edgeStart { transform: none; }
+.edgeEnd { transform: translateX(-100%); }
+.ylabel { position: absolute; left: calc(100% + var(--pad-r) + 0.6rem); transform: translateY(-50%);
+  white-space: nowrap; font-size: var(--step--1); color: var(--ink-muted); }
+.zoneLabel { position: absolute; top: 0.35rem; transform: translateX(-50%); font-size: var(--step--1);
+  color: var(--cool-ink); font-weight: 600; white-space: nowrap; }
+
+.today { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
+  background: var(--yellow); border: 2.5px solid var(--ink); box-shadow: 0 0 0 4px color-mix(in srgb, var(--yellow) 30%, transparent); }
+.lv-up { background: var(--r-warm-2); box-shadow: 0 0 0 4px color-mix(in srgb, var(--r-warm-2) 30%, transparent); }
+.lv-down { background: var(--r-cool-2); box-shadow: 0 0 0 4px color-mix(in srgb, var(--r-cool-2) 30%, transparent); }
+
+.cross { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed var(--ink); }
+.readout { position: absolute; transform: translate(-50%, -100%); background: var(--yellow); color: var(--yellow-ink);
+  padding: 0.4rem 0.7rem; border-radius: 8px; box-shadow: 0 8px 20px rgb(0 0 0 / 0.2); font-size: var(--step--1); white-space: nowrap; line-height: 1.4;
+  z-index: 2; display: grid; }
+.readout b { font-weight: 680; }
+.readoutRow { display: flex; align-items: center; gap: 0.4rem; }
+.readoutRow i { width: 0.7rem; height: 2px; display: inline-block; }
+
+.spark { position: relative; display: block; height: 30px; padding-right: 6px; }
+.spark svg { width: calc(100% - 6px); height: 100%; overflow: visible; }
+.sparkDot { position: absolute; right: 2px; width: 7px; height: 7px; margin-top: -3.5px; border-radius: 50%;
+  background: var(--paper); border: 1.5px solid var(--ink); }
+.sparkEmpty { font-size: var(--step--1); color: var(--ink-faint); }
+
+.weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-2); height: 210px; }
+.weekday { display: grid; grid-template-rows: auto 1fr auto; text-align: center; gap: 0.3rem; }
+.wdValue { font-size: var(--step--1); font-weight: 620; }
+.wdTrack { position: relative; border-top: 1px dashed transparent; }
+.wdTrack::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--rule-strong); }
+.wdBar { position: absolute; left: 18%; right: 18%; border-radius: 6px; }
+.wdUp { background: var(--r-warm-2); }
+.wdDown { background: var(--r-cool-2); }
+.wdName { font-size: var(--step--1); color: var(--ink-muted); }

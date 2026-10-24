@@ -1,0 +1,27 @@
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); counter-reset: none; }
+.steps h3 { font-size: var(--step-1); margin-top: var(--s-3); }
+.steps p { color: var(--ink-muted); margin-top: var(--s-2); }
+.num { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 10px; background: var(--sign);
+  color: var(--yellow); font-weight: 800; font-size: 1.15rem; }
+.formula { max-width: 52rem; }
+.eq { font-family: var(--font-read); font-style: italic; font-size: clamp(1.3rem, 1rem + 1.4vw, 2rem);
+  padding: var(--s-4) 0 var(--s-5); overflow-x: auto; }
+.weights { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); column-gap: var(--s-6); }
+.weights li { display: grid; grid-template-columns: 7.5rem 1fr 3.5rem; align-items: center; gap: var(--s-3);
+  font-size: var(--step--1); }
+.wRoute { font-weight: 650; color: var(--ink); text-decoration: none; }
+.wRoute:hover { text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 3px; }
+.bar { height: 0.6rem; background: var(--paper-deep); border-radius: 99px; overflow: hidden; }
+.bar span { display: block; height: 100%; background: var(--r-cool-2); border-radius: 99px; }
+.wVal { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-muted); }
+.reasons { margin: 0; display: grid; gap: var(--s-3); grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+.reasons dt code { font-size: var(--step--1); background: var(--paper-deep); padding: 0.15rem 0.45rem; border-radius: 6px; }
+.reasons dd { margin: var(--s-2) 0 0; }
+.more { max-width: 46rem; }
+.equal { font-size: var(--step-1); max-width: 46rem; }
+.routeList { list-style: none; margin: var(--s-4) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.routeList a { display: inline-block; padding: 0.25rem 0.65rem; border-radius: 99px; background: var(--paper-deep);
+  color: var(--ink); font-size: var(--step--1); font-weight: 600; text-decoration: none; }
+.routeList a:hover { background: var(--yellow); color: var(--yellow-ink); }

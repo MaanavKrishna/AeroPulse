@@ -20,30 +20,40 @@ as a public product for everyone.
 - Open dataset export with SHA-256 manifest; `aeropulse rebuild` recomputes the index from
   the export alone.
 
-### Site
-- Design language taken from aeronautical en-route charts: chart paper, ink, hairlines,
-  a latitude/longitude grid. No shadows, gradients, blur or card grids
+### Website
+- A Next.js (App Router) and TypeScript app in `web/`, separate from the Python API. Pages
+  are prerendered from the API and refresh at most once an hour.
+- Pages: home, routes, route detail, airports, airport detail, trends, festivals, festival
+  detail, compare, guide, methodology, data, status, about, plus chart embeds, a sitemap and
+  a 404 page.
+- Design language taken from airport wayfinding: dark sign panels, signal yellow,
+  pictograms, cards; blue and orange kept for fares cheaper and dearer than usual
   (see docs/contributing/design.md).
-- Home page answers the question in words first ("Yes, higher than usual."), with a ruled
-  facts strip and the fare ribbon. The route chart shows all 40 routes as airways between
-  airport chart symbols (IATA, city, ICAO), coloured by fares against usual, with a km scale
-  bar; the selected route carries its great-circle distance and the only moving plane.
-  No country outline is drawn.
-- Route pages: the leg between two airport symbols with its distance, booking-window tabs,
-  fare ribbon, booking curve, departure calendar, citation, CSV, image, embed and feed.
-- Motion is one draw-in per page plus responses to the reader; it all stops under reduced
-  motion. Server-rendered; works without JavaScript; light and dark themes.
+- Home page answers the question in words first ("Yes, higher than usual."), with a route
+  picker, booking-window tabs, the fare ribbon and a map of all 40 routes.
+- Route pages: booking-window tabs, fare ribbon with 1, 3 and 6-month ranges, when it is
+  usually cheapest, weekday effect, next departures, related routes, citation, CSV, image,
+  embed and feed.
+- New: a ⌘K search for routes, cities and pages; a compare tool for up to four routes; a
+  guide with an annotated chart, FAQ and glossary; a collection status page.
+- Animation with Motion: chart wipe-ins, sliding tab backgrounds, answers that cross-fade,
+  airways that draw in. All of it respects reduced motion. Light and dark themes.
+
+### API
+- Pure JSON API under `/v1` with routes, airports, insights, festivals, methodology,
+  sources, downloads and status; per-route CSV, SVG chart images and Atom feeds.
+- Per-IP rate limit; the website's server skips it with a shared `AEROPULSE_SITE_KEY`.
 
 ### Code layout
 - Reference data (airports with ICAO codes, basket, festivals) in one `reference` package
-  that ships with the install. API routes in `api/v1/routes.py`. Charts split into
-  `ribbon`, `curves`, `network` and shared `base`; formatting in `web/format.py`.
-  Templates in `layouts/`, `partials/`, `pages/`. Tests mirror the source tree.
+  that ships with the install. API routes in `api/v1/routes.py`, files in `api/files.py`.
+  Server-side chart images and feed text in `render/`. Tests mirror the source tree.
 
 ### Deployment
-- Docker Compose stack for real collection (`deploy/compose.yaml`).
-- Vercel hosted preview: builds a labelled demo snapshot at deploy time and serves it
-  read-only (`deploy/vercel/`).
+- Docker Compose stack for real collection: API, website, collector, Postgres, Caddy
+  (`deploy/compose.yaml`).
+- Vercel hosted preview in two projects: the API over a labelled demo snapshot built at
+  deploy time (`deploy/vercel/`), and the website (`web/`).
 
 ### Removed from the prototype
 - All airline and travel-agency scraping adapters and the robots.txt prober.

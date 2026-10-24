@@ -1,6 +1,6 @@
 site_name: AeroPulse docs
 site_description: Open, route-level index of Indian domestic airfares. Method, data, API, self-hosting.
-repo_url: https://github.com/MaanavKrishna/aeropulse
+repo_url: https://github.com/MaanavKrishna/AeroPulse
 edit_uri: edit/main/docs/
 copyright: Text CC BY 4.0. Code AGPL-3.0.
 

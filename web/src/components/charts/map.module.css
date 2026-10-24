@@ -1,0 +1,54 @@
+/* The route chart, styled like an aeronautical en-route chart. */
+.map { margin: 0; position: relative; background: var(--surface); border-radius: var(--radius); padding: var(--s-3);
+  box-shadow: var(--shadow); }
+:global(.sign) .map { box-shadow: none; border: 1px solid var(--sign-rule); }
+.map svg { width: 100%; height: auto; max-height: min(84vh, 52rem); margin-inline: auto; overflow: visible; }
+.compact svg { max-height: 30rem; }
+
+.grid { stroke: var(--grid); stroke-width: 0.8; }
+.tick { stroke: var(--ink-faint); stroke-width: 0.8; }
+.neatline { fill: none; stroke: var(--ink); stroke-width: 1; }
+.deg { fill: var(--ink-faint); font-size: 9px; font-stretch: 88%; }
+
+.airway { stroke: var(--airway); stroke-width: 1.3; stroke-linecap: round;
+  transition: opacity 300ms var(--ease-out), stroke-width 300ms var(--ease-out); }
+.up { stroke: var(--r-warm-2); }
+.down { stroke: var(--r-cool-2); }
+.unknown { stroke-dasharray: 2 2.5; }
+.hasSelection .airway:not(.selected) { opacity: 0.5; }
+.selected { stroke-width: 3.4; opacity: 1; }
+.dim { opacity: 0.18; }
+.hovering .airway { opacity: 0.22; }
+.hovering .airway.hot { opacity: 1; stroke-width: 2.6; }
+
+.airport circle { fill: var(--surface); stroke: var(--ink); stroke-width: 1.3; }
+.airport line { stroke: var(--ink); stroke-width: 1.3; }
+.airport text { fill: var(--ink); }
+.end circle { fill: var(--yellow); stroke: var(--yellow); }
+.end line { stroke: var(--yellow); }
+.iata { font-size: 11.5px; font-weight: 700; font-stretch: 108%; letter-spacing: 0.03em; }
+.city { font-size: 9px; fill: var(--ink-muted); font-weight: 450; font-stretch: 90%; }
+.compact .iata { font-size: 13px; }
+
+.titleBlock rect { fill: var(--paper); stroke: var(--rule-strong); stroke-width: 0.8; rx: 4px; }
+.tbTitle { font-size: 10.5px; font-weight: 700; fill: var(--ink); }
+.tbText { font-size: 8.5px; fill: var(--ink-muted); font-stretch: 92%; }
+.scale { stroke: var(--ink); stroke-width: 1; }
+
+.distance { font-size: 10px; font-weight: 650; fill: var(--ink); stroke: none; paint-order: stroke;
+  stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.plane { fill: var(--yellow); stroke: var(--sign); stroke-width: 0.8; }
+
+.hit line { stroke: transparent; stroke-width: 11; cursor: pointer; pointer-events: stroke; }
+.hit:focus-visible { outline: none; }
+.hit:focus-visible line { stroke: color-mix(in srgb, var(--focus) 25%, transparent); }
+
+.tip { position: absolute; z-index: 3; pointer-events: none; transform: translate(-50%, calc(-100% - 12px));
+  padding: 0.45rem 0.75rem; background: var(--yellow); color: var(--yellow-ink); font-size: var(--step--1);
+  white-space: nowrap; border-radius: 8px; display: grid; box-shadow: 0 8px 20px rgb(0 0 0 / 0.25); }
+.tip b { font-weight: 650; }
+
+@media (max-width: 40rem) {
+  .city { display: none; }
+  .iata { font-size: 14px; }
+}

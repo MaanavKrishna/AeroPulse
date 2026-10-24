@@ -16,3 +16,4 @@ build/
 *.db-shm
 deploy/vercel/snapshot/
 .vercel/
+.playwright-mcp/

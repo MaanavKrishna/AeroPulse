@@ -1,0 +1,8 @@
+.headline { margin-top: var(--s-6); max-width: 46rem; }
+.big { margin-top: var(--s-3); font-size: var(--step-3); font-weight: 760; letter-spacing: -0.02em; line-height: 1.1; }
+.sub { margin-top: var(--s-2); color: #d6dce4; font-size: var(--step-1); }
+.grid { display: grid; gap: var(--s-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); }
+.routeName { font-size: var(--step-1); }
+.routeName a { color: var(--ink); text-decoration: none; }
+.routeName a:hover { text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 3px; }
+.routeState { margin: var(--s-2) 0 var(--s-4); color: var(--ink-muted); font-size: var(--step--1); display: flex; gap: 0.5rem; align-items: center; }

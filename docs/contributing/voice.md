@@ -29,5 +29,6 @@ researcher reading the method. Write for the first; don't lose the other two.
 | route | sector, city pair (in UI) |
 | 95% range | confidence interval (UI); CI is fine in docs |
 
-Generated sentences live in `src/aeropulse/web/text.py`. Change them there, not in
-templates.
+Generated sentences live in `web/src/lib/copy.ts` and `web/src/lib/insight.ts` for the
+website, and `src/aeropulse/render/text.py` for chart images and feeds. Change them there, not
+in page components.

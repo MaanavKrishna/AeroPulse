@@ -1,0 +1,13 @@
+.picker { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; }
+.pick { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.4rem 0.4rem 0.8rem; border-radius: 999px;
+  background: var(--surface); box-shadow: var(--shadow); font-weight: 650; }
+.pick i { width: 0.9rem; height: 4px; border-radius: 2px; }
+.pick button { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 0; background: var(--paper-deep); cursor: pointer;
+  font-size: 1rem; line-height: 1; }
+.pick button:hover { background: var(--yellow); }
+.add select { height: 2.6rem; padding: 0 1rem; border-radius: 999px; border: 2px dashed var(--rule-strong);
+  background: transparent; font: inherit; font-weight: 650; color: var(--ink); cursor: pointer; }
+.add select:hover { border-color: var(--ink); }
+.table td, .table th { padding-inline: var(--s-4); }
+.dot { display: inline-block; width: 0.8rem; height: 4px; border-radius: 2px; margin-right: 0.5rem; vertical-align: middle; }
+.remove { border: 0; background: none; color: var(--ink-muted); cursor: pointer; text-decoration: underline; }

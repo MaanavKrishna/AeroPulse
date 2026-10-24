@@ -36,12 +36,14 @@ add a policy entry in `providers/policy.py` with `terms_reviewed=False`, registe
 `providers/__init__.py`, and add contract tests with a fixture that follows the provider's
 published schema.
 
-**Change copy:** generated sentences live in `src/aeropulse/web/text.py`. Follow
-`docs/contributing/voice.md`.
+**Change copy:** website sentences live in `web/src/lib/copy.ts` and `web/src/lib/insight.ts`;
+sentences in chart images and feeds live in `src/aeropulse/render/text.py`. Keep the two in
+step. Follow `docs/contributing/voice.md`.
 
 **Change the look:** read `docs/contributing/design.md` first. Tokens live in
-`src/aeropulse/web/static/css/tokens.css`; charts in `src/aeropulse/web/charts/`; templates
-are grouped into `layouts/`, `partials/` and `pages/`.
+`web/src/styles/tokens.css`; charts in `web/src/components/charts/`; pages in
+`web/src/app/(site)/`. Run `npm run lint`, `npm run typecheck` and `npm run build` in `web/`
+before opening a pull request.
 
 Where everything lives: `docs/architecture.md`.
 

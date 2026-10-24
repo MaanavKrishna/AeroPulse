@@ -1,0 +1,11 @@
+.embed { padding: var(--s-4); background: var(--surface); min-height: 100vh; }
+.head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: var(--s-3);
+  margin-bottom: var(--s-3); }
+.name { font-weight: 780; font-size: var(--step-2); letter-spacing: -0.015em; line-height: 1.1; }
+.sub { color: var(--ink-muted); font-size: var(--step--1); }
+.now { display: flex; align-items: center; gap: var(--s-2); }
+.price { font-weight: 780; font-size: var(--step-2); font-variant-numeric: tabular-nums; }
+.foot { display: flex; justify-content: space-between; gap: var(--s-3); margin-top: var(--s-3);
+  font-size: var(--step--1); color: var(--ink-muted); }
+.foot a { font-weight: 760; color: var(--ink); text-decoration-color: var(--yellow); text-decoration-thickness: 3px; }
+.foot strong { color: var(--ink); background: var(--yellow); color: var(--yellow-ink); padding: 0 0.4rem; border-radius: 4px; }

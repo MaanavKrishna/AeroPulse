@@ -1,0 +1,168 @@
+/* AeroPulse design tokens: "airport wayfinding".
+   The site borrows the language of airport signage: dark sign panels, wayfinding yellow,
+   pictograms, big bold type. One vivid diverging scale carries meaning everywhere: blue
+   for cheaper than usual, signal orange for dearer. Blue/orange stays readable for
+   colour-blind readers, and colour is never the only signal. */
+
+:root {
+  color-scheme: light;
+
+  /* Page and cards */
+  --paper: #eef0f3;
+  --paper-deep: #e2e6eb;
+  --surface: #ffffff;
+  --ink: #14171c;
+  --ink-muted: #5a6370;
+  --ink-faint: #8a93a0;
+  --rule: #dde1e7;
+  --rule-strong: #b9c1cc;
+  --grid: #dde3ea;
+  --airway: #9aa4b2;
+  --band: #e3e8ee;
+
+  /* Sign panels (header, hero, boards) */
+  --sign: #15181e;
+  --sign-2: #1f242c;
+  --sign-ink: #ffffff;
+  --sign-muted: #a6afbb;
+  --sign-rule: #333a45;
+  --yellow: #ffc72c;
+  --yellow-ink: #14171c;
+
+  --accent: #1d5fd1;
+  --focus: #ffb300;
+
+  /* The fare scale: cheaper ... usual ... dearer */
+  --r-cool-2: #1f7aff;
+  --r-cool-1: #8fbaff;
+  --r-even: #aeb6c2;
+  --r-warm-1: #ffa587;
+  --r-warm-2: #ff5a2b;
+  --cool-ink: #1662d6;
+  --warm-ink: #d13d0e;
+  --cool-wash: #e3eeff;
+  --warm-wash: #ffe9e1;
+  --even-wash: #eceff3;
+
+  /* Categorical colours for comparing several routes; never used for fare levels. */
+  --cat-1: #14171c;
+  --cat-2: #0e9f8f;
+  --cat-3: #8a4dff;
+  --cat-4: #e8a400;
+
+  --font-ui: var(--font-anek), "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-read: var(--font-serif), var(--font-anek), Georgia, serif;
+  --step--1: 0.84rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: clamp(1.35rem, 1.1rem + 0.9vw, 1.65rem);
+  --step-3: clamp(1.65rem, 1.25rem + 1.5vw, 2.2rem);
+  --step-4: clamp(2.1rem, 1.4rem + 2.8vw, 3.2rem);
+  --step-5: clamp(2.6rem, 1.4rem + 4.6vw, 4.6rem);
+
+  --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.5rem;
+  --s-6: 2rem; --s-7: 3rem; --s-8: 4.5rem;
+
+  --page: 82rem;
+  --measure: 68ch;
+  --gutter: clamp(1rem, 0.5rem + 2.2vw, 2.25rem);
+  --radius: 14px;
+  --radius-s: 8px;
+  --shadow: 0 1px 2px rgb(20 23 28 / 0.06), 0 8px 24px -12px rgb(20 23 28 / 0.18);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Inside a sign panel, charts and text switch to their on-dark palette automatically. */
+.sign {
+  color-scheme: dark;
+  --surface: var(--sign-2);
+  --ink: var(--sign-ink);
+  --ink-muted: var(--sign-muted);
+  --ink-faint: #7d8794;
+  --rule: var(--sign-rule);
+  --rule-strong: #4a5361;
+  --grid: #2a313b;
+  --airway: #5d6878;
+  --band: #2b323d;
+  --paper: var(--sign);
+  --paper-deep: #262c35;
+  --accent: var(--yellow);
+  --r-cool-2: #4d9bff;
+  --r-cool-1: #2c5c9e;
+  --r-even: #5d6878;
+  --r-warm-1: #a24d33;
+  --r-warm-2: #ff6a3d;
+  --cool-ink: #7db7ff;
+  --warm-ink: #ff8c66;
+  --cool-wash: #13284a;
+  --warm-wash: #3d1d13;
+  --even-wash: #262c35;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0f1216;
+  --paper-deep: #181c22;
+  --surface: #1a1e25;
+  --ink: #eef1f5;
+  --ink-muted: #9aa4b1;
+  --ink-faint: #707a87;
+  --rule: #2a3039;
+  --rule-strong: #3d4552;
+  --grid: #252b34;
+  --airway: #5d6878;
+  --band: #262c35;
+  --sign: #0a0c0f;
+  --sign-2: #171b21;
+  --accent: #7db7ff;
+  --r-cool-2: #4d9bff;
+  --r-cool-1: #2c5c9e;
+  --r-even: #5d6878;
+  --r-warm-1: #a24d33;
+  --r-warm-2: #ff6a3d;
+  --cool-ink: #7db7ff;
+  --warm-ink: #ff8c66;
+  --cool-wash: #13284a;
+  --warm-wash: #3d1d13;
+  --even-wash: #22272f;
+  --cat-1: #eef1f5;
+  --cat-2: #2fd0bd;
+  --cat-3: #ad85ff;
+  --cat-4: #ffc72c;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px -14px rgb(0 0 0 / 0.6);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #0f1216;
+    --paper-deep: #181c22;
+    --surface: #1a1e25;
+    --ink: #eef1f5;
+    --ink-muted: #9aa4b1;
+    --ink-faint: #707a87;
+    --rule: #2a3039;
+    --rule-strong: #3d4552;
+    --grid: #252b34;
+    --airway: #5d6878;
+    --band: #262c35;
+    --sign: #0a0c0f;
+    --sign-2: #171b21;
+    --accent: #7db7ff;
+    --r-cool-2: #4d9bff;
+    --r-cool-1: #2c5c9e;
+    --r-even: #5d6878;
+    --r-warm-1: #a24d33;
+    --r-warm-2: #ff6a3d;
+    --cool-ink: #7db7ff;
+    --warm-ink: #ff8c66;
+    --cool-wash: #13284a;
+    --warm-wash: #3d1d13;
+    --even-wash: #22272f;
+    --cat-1: #eef1f5;
+    --cat-2: #2fd0bd;
+    --cat-3: #ad85ff;
+    --cat-4: #ffc72c;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px -14px rgb(0 0 0 / 0.6);
+  }
+}

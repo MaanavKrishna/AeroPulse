@@ -1,0 +1,13 @@
+.summary { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); margin-bottom: var(--s-5);
+  padding-bottom: var(--s-4); border-bottom: 1px solid var(--ink); font-size: var(--step-1); }
+.summary b { font-size: var(--step-3); font-weight: 680; margin-right: 0.3rem; color: var(--ink); }
+.summary :global(.tone-up) { color: var(--warm-ink); }
+.summary :global(.tone-down) { color: var(--cool-ink); }
+.controls { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; margin-bottom: var(--s-3); }
+.search input { height: 2.4rem; min-width: 15rem; padding: 0 0.85rem; font: inherit; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule-strong); border-radius: var(--radius); }
+.search input:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.city { display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--step--1); color: var(--ink-muted); }
+.city select { height: 2.4rem; padding: 0 0.6rem; font: inherit; font-size: var(--step-0); color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule-strong); border-radius: var(--radius); }
+.list { margin-top: var(--s-3); border-top: 1px solid var(--rule); }

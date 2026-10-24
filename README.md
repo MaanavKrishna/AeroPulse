@@ -16,23 +16,51 @@ method.
 > [docs/operations/provider-spike.md](docs/operations/provider-spike.md). Until then the site
 > runs on clearly labelled synthetic data.
 
+## Two parts
+
+| Part | Stack | Folder |
+|---|---|---|
+| **API and pipeline**: collects fares, builds the index, serves JSON, CSV, chart images and feeds | Python, FastAPI, SQLAlchemy | `src/aeropulse/` |
+| **Website**: routes, airports, trends, festivals, compare, guide, method, open data | Next.js (App Router), TypeScript, Motion | `web/` |
+
+The website has no database. It reads the API and caches each response for an hour.
+
 ## Run it locally
 
+You need Python 3.12+ and Node 20+.
+
 ```bash
+# 1. The API, with 150 days of synthetic, labelled history
 python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
-.venv/bin/aeropulse demo          # 150 days of synthetic, labelled history
-.venv/bin/aeropulse serve         # http://127.0.0.1:8000
+.venv/bin/aeropulse demo
+.venv/bin/aeropulse serve --port 8000        # http://127.0.0.1:8000/v1/docs
+
+# 2. The website, in a second terminal
+cd web && cp .env.example .env.local && npm install && npm run dev   # http://localhost:3000
 ```
 
 To collect real fares, put a provider key in `.env` (see [.env.example](.env.example)), then
 run `aeropulse collect` and `aeropulse build`.
 
+## Pages
+
+| Page | What it answers |
+|---|---|
+| `/` | Is my fare high today? Pick a route and a booking window |
+| `/routes`, `/routes/del-bom` | Every route; one route's fares, when it is cheapest, which weekday, next departures |
+| `/airports`, `/airports/del` | Every route from one city |
+| `/trends` | The national index, booking curve and weekday effect |
+| `/festivals` | How fares behave around Diwali, Chhath and other peaks |
+| `/compare` | Up to four routes on one chart |
+| `/guide` | How to read the charts, FAQ and glossary |
+| `/methodology`, `/data`, `/status`, `/about` | The method, downloads and API, collection health, sources and ethics |
+
 ## Deploy
 
 | Target | What you get | Guide |
 |---|---|---|
-| Docker Compose on a server | Site, API, collector every 6 hours, Postgres, HTTPS | [Self-hosting](docs/operations/self-hosting.md) |
-| Vercel | Hosted preview of the site over a read-only demo snapshot | [Hosted preview](docs/operations/vercel.md) |
+| Docker Compose on a server | Website, API, collector every 6 hours, Postgres, HTTPS | [Self-hosting](docs/operations/self-hosting.md) |
+| Vercel | Hosted preview: the website plus the API over a read-only demo snapshot | [Hosted preview](docs/operations/vercel.md) |
 
 ## What's where
 
@@ -44,12 +72,16 @@ src/aeropulse/
   official/    DGCA traffic and MoSPI CPI importers
   pipeline/    collect, build, export, rebuild-from-export
   db/          models, sessions, Alembic migrations
-  queries.py   every read the site and API make
-  web/         server-rendered site: views, text, charts, templates, static
-  api/v1/      public JSON API
-deploy/        Dockerfile, Compose, Caddy, backups, Vercel preview
+  queries.py   every read the API makes
+  api/         JSON API (v1/) and files: CSV, chart images, feeds, downloads
+  render/      server-side SVG charts and text for images and feeds
+web/
+  src/app/         pages (App Router)
+  src/components/  charts, explorers, UI pieces
+  src/lib/         API client, types, formatting, copy, chart maths
+deploy/        Dockerfiles, Compose, Caddy, backups, Vercel API preview
 docs/          documentation site (MkDocs)
-tests/         mirrors src: core, providers, pipeline, web
+tests/         mirrors src: core, providers, pipeline, api
 ```
 
 More detail in [docs/architecture.md](docs/architecture.md).
@@ -66,8 +98,9 @@ aeropulse rebuild exports      # "All N national index points rebuilt exactly"
 ## Development
 
 ```bash
-.venv/bin/pytest                  # 76 tests, no network
+.venv/bin/pytest                  # 81 tests, no network
 .venv/bin/ruff check src tests
+cd web && npm run lint && npm run typecheck && npm run build   # build needs the API running
 mkdocs serve                      # docs site (pip install mkdocs-material)
 ```
 
@@ -78,4 +111,4 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) first, and
 
 - Code: [AGPL-3.0](LICENSE). If you run a modified version as a service, publish your changes.
 - Data and text: [CC BY 4.0](LICENSE-DATA). Credit "AeroPulse" with a link.
-- Fonts: Anek Latin and Source Serif 4, SIL Open Font License (see `src/aeropulse/web/static/fonts/`).
+- Fonts: Anek Latin and Source Serif 4, SIL Open Font License (see `web/src/app/fonts/`).

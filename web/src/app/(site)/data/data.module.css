@@ -1,0 +1,20 @@
+.files { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
+.files li { display: flex; flex-direction: column; }
+.fileTop { display: flex; align-items: center; gap: var(--s-3); }
+.fileName { font-weight: 760; font-size: var(--step-1); overflow-wrap: anywhere; }
+.fileDesc { color: var(--ink-muted); margin-top: var(--s-3); flex: 1; }
+.fileMeta { display: flex; gap: var(--s-2); margin-top: var(--s-4); font-size: var(--step--1); }
+.fileMeta span { background: var(--paper-deep); border-radius: 99px; padding: 0.15rem 0.6rem; font-weight: 600; }
+.hash { margin-top: var(--s-3); font-size: var(--step--1); color: var(--ink-muted); }
+.hash summary { cursor: pointer; }
+.hash code { display: block; margin-top: var(--s-2); overflow-wrap: anywhere; font-size: 0.75rem; }
+.apiGrid { display: grid; gap: var(--s-4); }
+@media (min-width: 60rem) { .apiGrid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: start; } }
+.apiGrid pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.apiGrid h3 { font-size: var(--step-1); }
+.perRoute { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+.perRoute h3 { font-size: var(--step-1); }
+.perRoute p { margin: var(--s-2) 0 var(--s-3); }
+.cite { font-family: var(--font-read); font-size: var(--step-1); line-height: 1.5; }

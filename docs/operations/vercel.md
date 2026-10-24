@@ -1,11 +1,18 @@
 # Hosted preview (Vercel)
 
-The repository can be deployed to Vercel as a **hosted preview**: the full site and API over
-a read-only demo snapshot. It is for showing the product, not for publishing real numbers:
-it collects nothing, and every page carries the demo banner. For real collection, run the
+The repository deploys to Vercel as a **hosted preview**: the website and the API over a
+read-only demo snapshot. It is for showing the product, not for publishing real numbers: it
+collects nothing, and every page carries the demo notice. For real collection, run the
 Docker stack in [Self-hosting](self-hosting.md).
 
-## How it works
+It uses two Vercel projects connected to the same GitHub repository.
+
+| Project | Root directory | Framework | Serves |
+|---|---|---|---|
+| `aeropulse-api` | `/` (repository root) | Python | `/v1/*`, downloads, CSV, chart images, feeds |
+| `aeropulse` | `web` | Next.js | The website |
+
+## The API project
 
 Configured in `pyproject.toml`:
 
@@ -21,25 +28,33 @@ build = "python deploy/vercel/build.py"
    with the demo provider, strips raw payloads, compacts the database to about 56 MB, and
    writes the open-data export. Takes about a minute.
 2. **Serve** (`deploy/vercel/app.py`): opens the snapshot with SQLite's read-only, immutable
-   mode, sets `AEROPULSE_ENV=production`, and serves the normal FastAPI app. The public site
-   URL comes from Vercel's `VERCEL_PROJECT_PRODUCTION_URL` unless `AEROPULSE_SITE_URL` is set.
+   mode, sets `AEROPULSE_ENV=production`, and serves the normal FastAPI app.
 
-Search engines are told not to index it (`robots.txt` disallows everything while the data
-is demo data).
+| Variable | Meaning |
+|---|---|
+| `AEROPULSE_SITE_URL` | The website's address, used in feeds and chart images |
+| `AEROPULSE_SITE_KEY` | Shared secret; requests from the website that carry it skip the rate limit |
+| `AEROPULSE_SNAPSHOT_DAYS` | Days of demo history to generate at build time (default 120) |
 
-## Deploy
+## The website project
 
-Connect the GitHub repository in Vercel (framework preset: FastAPI); every push to `main`
-deploys. Optional environment variables:
+A standard Next.js project with **Root Directory** set to `web`.
 
-| Variable | Default | Meaning |
-|---|---|---|
-| `AEROPULSE_SITE_URL` | `https://<production domain>` | Used in citations, feeds and the sitemap |
-| `AEROPULSE_SNAPSHOT_DAYS` | `120` | Days of demo history to generate at build time |
+| Variable | Meaning |
+|---|---|
+| `NEXT_PUBLIC_AEROPULSE_API_URL` | The API project's address, e.g. `https://aeropulse-api.vercel.app` |
+| `NEXT_PUBLIC_SITE_URL` | The website's own address |
+| `AEROPULSE_SITE_KEY` | The same secret as on the API project. Server-only |
 
-To try the same thing locally:
+The build prerenders every route, airport and festival page from the API, so deploy the API
+first. Pages refresh from the API at most once an hour.
+
+Search engines are told not to index either project while the data is demo data.
+
+## Try it locally
 
 ```bash
 python deploy/vercel/build.py
 uvicorn deploy.vercel.app:app --port 8000
+cd web && npm run build && npm start
 ```

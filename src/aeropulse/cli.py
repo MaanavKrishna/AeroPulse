@@ -202,7 +202,7 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("file")
     s.set_defaults(func=cmd_cpi)
 
-    s = sub.add_parser("serve", help="run the website and API")
+    s = sub.add_parser("serve", help="run the API")
     s.add_argument("--host", default="127.0.0.1")
     s.add_argument("--port", type=int, default=8000)
     s.add_argument("--reload", action="store_true")

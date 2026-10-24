@@ -111,6 +111,23 @@ def test_rate_limit():
     assert [c.get("/v1/x").status_code for _ in range(3)] == [200, 200, 429]
 
 
+def test_site_key_skips_rate_limit():
+    from fastapi import FastAPI
+
+    from aeropulse.app import RateLimit
+    app = FastAPI()
+    app.add_middleware(RateLimit, per_minute=1, site_key="s3cret")
+
+    @app.get("/v1/x")
+    def x():
+        return {}
+    c = TestClient(app)
+    site = {"X-AeroPulse-Site-Key": "s3cret"}
+    assert [c.get("/v1/x", headers=site).status_code for _ in range(3)] == [200, 200, 200]
+    wrong = {"X-AeroPulse-Site-Key": "nope"}
+    assert [c.get("/v1/x", headers=wrong).status_code for _ in range(2)] == [200, 429]
+
+
 def test_great_circle_distance():
     from aeropulse.reference import great_circle_km
     assert 1100 < great_circle_km("DEL", "BOM") < 1170

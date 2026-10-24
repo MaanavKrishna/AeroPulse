@@ -1,4 +1,4 @@
-# Production-style stack: app + collector + Postgres + Caddy (automatic HTTPS).
+# Production-style stack: API + website + collector + Postgres + Caddy (automatic HTTPS).
 #   cp .env.example .env   # fill in, set AEROPULSE_ENV=production and the DB URL below
 #   docker compose -f deploy/compose.yaml up -d
 # For a local demo instead: AEROPULSE_ENV=development AEROPULSE_PROVIDERS=demo, then
@@ -35,6 +35,16 @@ services:
     command: ["sh", "/app/collector.sh"]
     depends_on: { db: { condition: service_healthy } }
 
+  web:
+    build: { context: .., dockerfile: deploy/web.Dockerfile }
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_AEROPULSE_API_URL: https://${SITE_DOMAIN:-localhost}
+      NEXT_PUBLIC_SITE_URL: https://${SITE_DOMAIN:-localhost}
+      AEROPULSE_API_INTERNAL_URL: http://app:8000
+      AEROPULSE_SITE_KEY: ${AEROPULSE_SITE_KEY:?set AEROPULSE_SITE_KEY in .env}
+    depends_on: { app: { condition: service_healthy } }
+
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
@@ -42,6 +52,6 @@ services:
     environment:
       SITE_DOMAIN: ${SITE_DOMAIN:-localhost}
     volumes: [./Caddyfile:/etc/caddy/Caddyfile:ro, caddydata:/data]
-    depends_on: [app]
+    depends_on: [app, web]
 
 volumes: { pgdata: {}, exports: {}, caddydata: {} }
