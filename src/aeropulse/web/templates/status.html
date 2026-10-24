@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Collection status | AeroPulse{% endblock %}
+{% block heading %}Collection status{% endblock %}
+{% block lede %}<p class="lede">Every collection run for the last {{ st.days }} days. Gaps are shown as gaps; nothing is filled in.</p>{% endblock %}
 {% block main %}
-<section class="page-head wrap">
-  <h1>Collection status</h1>
-  <p>Every collection run for the last {{ st.days }} days. Gaps are shown as gaps; nothing is filled in.</p>
-</section>
+<div class="ground-pad"></div>
 <section class="wrap">
   {% if not st.providers %}
   <div class="empty"><h2>No collection runs yet</h2><p>Runs appear here after the first <code>aeropulse collect</code>.</p></div>

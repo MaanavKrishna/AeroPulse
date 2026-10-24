@@ -21,9 +21,18 @@ as a public product for everyone.
   the export alone.
 
 ### Site
-- New consumer-first design ("fare weather"): route picker, fare ribbon, booking curve,
-  departure calendar, festival pages, status page, embeds, feeds.
-- Server-rendered; works without JavaScript; light and dark themes.
+- "Night flight" design: every page opens in a twilight sky and comes down through a
+  horizon to the numbers. The home page shows all 40 routes as a live constellation of
+  flight arcs between airports at their real positions, coloured by today's fares against
+  usual, with planes flying them. Pick a route on the map or in the picker and the answer
+  updates in place.
+- Route pages open with the route drawn as a single flight, then the fare ribbon, booking
+  curve, departure calendar, citation, download and embed tools. Festival, status, method,
+  data and about pages share the same sky header.
+- Motion: one arrival sequence per page (airports, arcs, planes; fare counts from usual to
+  today), view transitions between pages and on route changes. Everything stops under
+  reduced motion.
+- Server-rendered; works without JavaScript; light and dark grounds.
 
 ### Removed from the prototype
 - All airline and travel-agency scraping adapters and the robots.txt prober.

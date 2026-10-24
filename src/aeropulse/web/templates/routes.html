@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 {% import "_macros.html" as ui with context %}
 {% block title %}All routes: Indian domestic fares vs usual | AeroPulse{% endblock %}
+{% block heading %}Every route we track{% endblock %}
+{% block lede %}<p class="lede">{{ rows|length }} routes between India's busiest airports, both directions. Each line shows the last 90 days against that route's own usual range.</p>{% endblock %}
 {% block main %}
-<section class="page-head wrap">
-  <h1>Every route we track</h1>
-  <p>{{ rows|length }} routes between India's busiest airports, both directions. Each line shows the last 90 days against that route's own usual range.</p>
-</section>
+<div class="ground-pad"></div>
 <section class="wrap">
   <div class="controls">
     <nav class="segments" aria-label="Sort routes">

@@ -107,3 +107,25 @@ def test_static_assets_are_content_hashed(client):
     assert "/static/css/app.css?v=" in html
     r = client.get("/static/css/app.css")
     assert "immutable" in r.headers["cache-control"]
+
+
+def test_home_map_draws_every_route_as_a_link(client):
+    html = client.get("/?origin=DEL&dest=PAT").text
+    assert html.count('class="arc ') == 40
+    assert html.count('class="arc-hit"') == 40
+    assert 'class="arc lv-4 is-selected"' in html or 'is-selected" d=' in html
+    assert html.count("<animateMotion") == 40
+    assert 'href="/routes/del-pat"' in html
+
+
+def test_hero_fragment_is_only_the_answer(client):
+    """The map stays on the page; the fragment swaps the question, picker and answer."""
+    html = client.get("/fragments/hero?origin=BLR&dest=CCU&w=1-7").text
+    assert 'data-route="BLR-CCU"' in html and "data-hero-form" in html
+    assert "sky-map" not in html
+
+
+def test_route_page_has_flight_header(client):
+    html = client.get("/routes/del-pat").text
+    assert 'class="flight"' in html and "animateMotion" in html
+    assert "view-transition-name: rt-del-pat" in html

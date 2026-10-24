@@ -27,7 +27,7 @@ from ..reference import (
     split_route,
 )
 from . import text
-from .charts import svg
+from .charts import network, svg
 
 router = APIRouter(include_in_schema=False)
 STATIC = PACKAGE_DIR / "web" / "static"
@@ -47,7 +47,8 @@ def static_url(path: str) -> str:
 
 
 env = templates.env
-env.globals.update(static_url=static_url, svg=svg, text=text, m=m, route_name=route_name,
+env.globals.update(static_url=static_url, svg=svg, network=network, text=text, m=m,
+                   route_name=route_name,
                    route_slug=route_slug, airports=airports, windows=m.WINDOWS,
                    site_url=lambda: get_settings().site_url.rstrip("/"))
 env.filters.update(inr=svg.inr, day_month=svg.day_month,
@@ -96,16 +97,18 @@ def home(request: Request, s: Session = Depends(db), origin: str | None = None,
     hero = hero_context(s, (origin or "").upper(), (dest or "").upper(), w)
     rows = q.route_rows(s)
     rows.sort(key=lambda r: -(r["verdict"].pct_vs_median or 0))
-    upcoming = [f for f in load_festivals() if f.date >= dt.date.today()][:2]
+    today = dt.date.today()
+    upcoming = [f for f in load_festivals() if f.date >= today][:3]
     return render(request, "home.html", s, hero=hero, head=q.headline(s), rows=rows,
-                  upcoming=upcoming, nav="home")
+                  upcoming=upcoming, today=today, nav="home",
+                  map=network.network_map(rows, selected=hero.get("route_id")))
 
 
 @router.get("/fragments/hero", response_class=HTMLResponse)
 def hero_fragment(request: Request, s: Session = Depends(db), origin: str | None = None,
                   dest: str | None = None, w: str | None = None):
     hero = hero_context(s, (origin or "").upper(), (dest or "").upper(), w)
-    return render(request, "_hero_section.html", s, hero=hero)
+    return render(request, "_hero_copy.html", s, hero=hero)
 
 
 # ----------------------------------------------------------------------------- routes

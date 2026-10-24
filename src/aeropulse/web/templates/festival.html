@@ -2,12 +2,11 @@
 {% set f = view.festival %}
 {% block title %}{{ f.name }} {{ f.date.year }} flight fares | AeroPulse{% endblock %}
 {% block description %}How {{ f.name }} travel fares compare with ordinary weeks on India's busiest festival routes.{% endblock %}
+{% block crumbs %}<p class="crumbs"><a href="/festivals">Festivals</a> / {{ f.name }} {{ f.date.year }}</p>{% endblock %}
+{% block heading %}{{ f.name }} {{ f.date.year }} fares{% endblock %}
+{% block lede %}<p class="lede">{{ "Around " if not f.confirmed }}{{ f.date|day_month }} {{ f.date.year }}. We follow the cheapest fare for flying on {{ view.peak|day_month }}, two days before, as it is seen each day, and compare it with ordinary dates three to six weeks earlier booked the same distance ahead.</p>{% endblock %}
 {% block main %}
-<section class="page-head wrap">
-  <p class="crumbs small muted"><a href="/festivals" style="color:inherit">Festivals</a> / {{ f.name }} {{ f.date.year }}</p>
-  <h1>{{ f.name }} {{ f.date.year }} fares</h1>
-  <p>{{ "Around " if not f.confirmed }}{{ f.date|day_month }} {{ f.date.year }}. We follow the cheapest fare for flying on {{ view.peak|day_month }}, two days before, as it is seen each day, and compare it with ordinary dates three to six weeks earlier booked the same distance ahead.</p>
-</section>
+<div class="ground-pad"></div>
 <section class="wrap">
   {% if view.routes %}
   {% set top = view.routes[0] %}

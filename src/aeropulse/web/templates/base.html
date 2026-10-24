@@ -2,7 +2,7 @@
 <html lang="en-IN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{% block title %}AeroPulse: Indian airfares, today vs usual{% endblock %}</title>
   <meta name="description" content="{% block description %}See whether domestic flight fares in India are higher or lower than usual, route by route. Open data, open method.{% endblock %}">
   {% if mode == "demo" %}<meta name="robots" content="noindex">{% endif %}
@@ -11,8 +11,7 @@
   <meta property="og:title" content="{{ self.title() }}">
   <meta property="og:description" content="{{ self.description() }}">
   {% block og %}{% endblock %}
-  <meta name="theme-color" content="#f2f5f8" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0e1522" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0a1030">
   <link rel="preload" href="/static/fonts/anek-latin-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ static_url('css/tokens.css') }}">
   <link rel="stylesheet" href="{{ static_url('css/app.css') }}">
@@ -21,65 +20,76 @@
   <script type="module" src="{{ static_url('js/app.js') }}"></script>
   {% block head %}{% endblock %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
   <a class="skip" href="#main">Skip to content</a>
-  {% if mode == "demo" %}
-  <div class="notice" role="note">
-    <div class="wrap">
-      <span><strong>Demo data.</strong> These fares are synthetic, not real prices. <a href="/about#demo">Why</a></span>
+  <div class="sky {% block sky_class %}sky-page{% endblock %}">
+    <div class="stars" aria-hidden="true"></div>
+    {% if mode == "demo" %}
+    <div class="notice" role="note">
+      <div class="wrap"><p><strong>Demo data.</strong> These fares are synthetic, not real prices. <a href="/about#demo">Why</a></p></div>
     </div>
+    {% elif settings.allow_unreviewed_terms %}
+    <div class="notice" role="note"><div class="wrap"><p><strong>Private trial.</strong> Provider terms are still under review. Do not cite these numbers yet.</p></div></div>
+    {% endif %}
+    <header class="site-head">
+      <div class="wrap">
+        <a class="wordmark" href="/" aria-label="AeroPulse home">
+          <svg viewBox="0 0 28 16" aria-hidden="true"><path d="M2 13 Q14 -5 26 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 3.2"/><circle cx="26" cy="13" r="2.6" fill="var(--warm)"/></svg>
+          <span>AeroPulse</span>
+        </a>
+        <nav class="nav" aria-label="Main">
+          {% for key, href, label in [("routes", "/routes", "Routes"), ("festivals", "/festivals", "Festivals"), ("data", "/data", "Data"), ("methodology", "/methodology", "Method"), ("about", "/about", "About")] %}
+          <a href="{{ href }}" {% if nav == key %}aria-current="page"{% endif %}>{{ label }}</a>
+          {% endfor %}
+        </nav>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </header>
+    {% block sky %}
+    <div class="page-head wrap">
+      {% block crumbs %}{% endblock %}
+      <h1 style="view-transition-name: page-title">{% block heading %}{% endblock %}</h1>
+      {% block lede %}{% endblock %}
+    </div>
+    {% endblock %}
+    <div class="horizon" aria-hidden="true"></div>
   </div>
-  {% elif settings.allow_unreviewed_terms %}
-  <div class="notice" role="note"><div class="wrap"><strong>Private trial.</strong> <span>Provider terms are still under review. Do not cite these numbers yet.</span></div></div>
-  {% endif %}
-  <header class="site-head">
-    <div class="wrap">
-      <a class="wordmark" href="/" aria-label="AeroPulse home">
-        <svg viewBox="0 0 22 12" aria-hidden="true"><path d="M1 9 C6 9 6 3 11 3 S16 9 21 9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-        AeroPulse
-      </a>
-      <nav class="nav" aria-label="Main">
-        {% for key, href, label in [("routes", "/routes", "Routes"), ("festivals", "/festivals", "Festivals"), ("data", "/data", "Data"), ("methodology", "/methodology", "Method"), ("about", "/about", "About")] %}
-        <a href="{{ href }}" {% if nav == key %}aria-current="page"{% endif %}>{{ label }}</a>
-        {% endfor %}
-      </nav>
-      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z" fill="currentColor"/></svg>
-      </button>
-    </div>
-  </header>
-  <main id="main">
+  <main id="main" class="ground">
     {% block main %}{% endblock %}
   </main>
   <footer class="site-foot">
-    <div class="wrap cols">
-      <div>
-        <h2>AeroPulse</h2>
-        <p>An open index of Indian domestic airfares. It describes what fares have done. It does not predict them.</p>
+    <div class="wrap">
+      <div class="foot-lead">
+        <p class="foot-mark">AeroPulse</p>
+        <p>An open record of Indian domestic airfares. It describes what fares have done. It does not predict them.</p>
       </div>
-      <div>
-        <h2>Use the data</h2>
-        <ul>
-          <li><a href="/data">Downloads</a></li>
-          <li><a href="/api">API</a></li>
-          <li><a href="/methodology">How it is measured</a></li>
-        </ul>
-      </div>
-      <div>
-        <h2>Trust</h2>
-        <ul>
-          <li><a href="/status">Collection status</a></li>
-          <li><a href="/about#sources">Where fares come from</a></li>
-          <li><a href="/about#never">What we never collect</a></li>
-        </ul>
-      </div>
-      <div>
-        <h2>Licences</h2>
-        <ul>
-          <li>Data and text: CC BY 4.0</li>
-          <li>Code: AGPL-3.0</li>
-          <li><a href="https://github.com/MaanavKrishna/aeropulse">Source code</a></li>
-        </ul>
+      <div class="cols">
+        <div>
+          <h2>Use the data</h2>
+          <ul>
+            <li><a href="/data">Downloads</a></li>
+            <li><a href="/api">API</a></li>
+            <li><a href="/methodology">How it is measured</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Trust</h2>
+          <ul>
+            <li><a href="/status">Collection status</a></li>
+            <li><a href="/about#sources">Where fares come from</a></li>
+            <li><a href="/about#never">What we never collect</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Licences</h2>
+          <ul>
+            <li>Data and text: CC BY 4.0</li>
+            <li>Code: AGPL-3.0</li>
+            <li><a href="https://github.com/MaanavKrishna/aeropulse">Source code</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </footer>

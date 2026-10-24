@@ -2,10 +2,11 @@
 {% set v = r.verdict %}
 <li>
   <a class="row {{ text.level_class(v.level) }}" href="/routes/{{ route_slug(r.route_id) }}">
-    <span class="name">{{ r.name }}<small>{{ r.origin }} to {{ r.destination }}</small></span>
-    <span class="state"><span class="mark" aria-hidden="true">{{ text.MARKS[v.level] }}</span>{{ text.short_verdict(v) }}</span>
+    <span class="codes" style="view-transition-name: rt-{{ route_slug(r.route_id) }}"><span>{{ r.origin }}</span><i aria-hidden="true"></i><span>{{ r.destination }}</span></span>
+    <span class="name">{{ r.name }}</span>
     {{ svg.ribbon(r.series, typical=v, uid="row-" ~ r.route_id, axis=False, size="xs", data=False,
                   label="Last 90 days on " ~ r.name ~ ": " ~ text.short_verdict(v))|safe }}
+    <span class="state"><span class="mark" aria-hidden="true">{{ text.MARKS[v.level] }}</span>{{ text.short_verdict(v) }}</span>
   </a>
 </li>
 {%- endmacro %}

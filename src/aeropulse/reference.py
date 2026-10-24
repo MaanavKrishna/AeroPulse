@@ -21,6 +21,8 @@ class Airport:
     airport: str
     state: str
     aliases: tuple[str, ...]
+    lat: float = 0.0
+    lon: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -43,7 +45,8 @@ class Festival:
 def airports() -> dict[str, Airport]:
     rows = json.loads((PACKAGE_DIR / "data" / "airports.json").read_text("utf-8"))
     return {r["iata"]: Airport(r["iata"], r["city"], r["city_hi"], r["airport"], r["state"],
-                               tuple(r.get("aliases", []))) for r in rows}
+                               tuple(r.get("aliases", [])), r.get("lat", 0.0),
+                               r.get("lon", 0.0)) for r in rows}
 
 
 def split_route(route_id: str) -> tuple[str, str]:

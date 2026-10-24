@@ -5,42 +5,56 @@
 {% block description %}{{ copy.headline }}. {{ copy.body }}{% endblock %}
 {% block og %}<meta property="og:image" content="{{ site_url() }}/img/routes/{{ route_slug(route_id) }}.svg?w={{ window }}">
 <link rel="alternate" type="application/atom+xml" title="{{ o.city }} to {{ d.city }} fares" href="/feeds/routes/{{ route_slug(route_id) }}.xml">{% endblock %}
-{% block main %}
-<section class="route-head wrap">
-  <p class="crumbs"><a href="/routes">Routes</a> / {{ origin }} to {{ dest }}</p>
-  <div class="route-title">
-    <h1>{{ o.city }} to {{ d.city }}</h1>
-    <span class="codes" aria-hidden="true">{{ origin }} {{ dest }}</span>
-    {% if reverse %}<a class="small" href="/routes/{{ route_slug(reverse) }}?w={{ window }}">Swap to {{ d.city }} to {{ o.city }}</a>{% endif %}
+{% block sky_class %}sky-route{% endblock %}
+{% block sky %}
+<section class="route-sky wrap" aria-labelledby="route-title">
+  <p class="crumbs"><a href="/routes">Routes</a><span aria-hidden="true"> / </span>{{ origin }} to {{ dest }}</p>
+  <div class="route-flight">
+    <div class="end end-o"><span class="code">{{ origin }}</span><span class="city">{{ o.city }}</span></div>
+    {{ network.route_flight(origin, dest, copy.level)|safe }}
+    <div class="end end-d"><span class="code">{{ dest }}</span><span class="city">{{ d.city }}</span></div>
+  </div>
+  <div class="route-titlebar">
+    <h1 id="route-title" style="view-transition-name: rt-{{ route_slug(route_id) }}">{{ o.city }} to {{ d.city }}</h1>
+    {% if reverse %}<a class="pill-link" href="/routes/{{ route_slug(reverse) }}?w={{ window }}">Flip to {{ d.city }} to {{ o.city }}</a>{% endif %}
   </div>
 
-  <nav class="segments mt-5" aria-label="How far ahead you are flying">
+  <nav class="windows" aria-label="How far ahead you are flying">
     {% for win in windows %}
     {% set wv = window_verdicts[win.key] %}
     <a href="?w={{ win.key }}&range={{ span }}" {% if win.key == window %}aria-current="true"{% endif %} class="{{ text.level_class(wv.level) }}">
-      <span class="mark" aria-hidden="true">{{ text.MARKS[wv.level] }}</span>{{ win.label|capitalize }}
+      <span class="w-label">{{ win.label|capitalize }}</span>
+      <span class="w-state"><span class="mark" aria-hidden="true">{{ text.MARKS[wv.level] }}</span>{{ text.short_verdict(wv) }}</span>
     </a>
     {% endfor %}
   </nav>
 
-  <div class="verdict {{ text.level_class(copy.level) }}">
-    <p class="verdict-head"><span class="mark" aria-hidden="true">{{ text.MARKS[copy.level] }}</span>{{ copy.headline }}.</p>
-    <p class="verdict-body">{{ copy.body }}</p>
+  <div class="answer answer-route {{ text.level_class(copy.level) }}">
+    <p class="answer-state"><span class="mark" aria-hidden="true">{{ text.MARKS[copy.level] }}</span>{{ copy.headline }}</p>
+    {% if latest %}
+    <p class="answer-fare">
+      <span class="fare" data-count-to="{{ latest.price|round|int }}" data-count-from="{{ (verdict.median or latest.price)|round|int }}">₹{{ latest.price|inr }}</span>
+      {% if verdict.pct_vs_median is not none %}<span class="delta">{{ "%+.0f"|format(verdict.pct_vs_median) }}%</span>{% endif %}
+    </p>
+    {% endif %}
+    <p class="answer-usual">{{ copy.body }}</p>
   </div>
-
-  {% if latest %}
-  <dl class="facts">
-    <div class="fact"><dt>Median cheapest fare today</dt><dd>₹{{ latest.price|inr }}</dd></div>
-    <div class="fact"><dt>Usual range, last 90 days</dt><dd>{% if verdict.low %}₹{{ verdict.low|inr }}–₹{{ verdict.high|inr }}{% else %}<small>Building up</small>{% endif %}</dd></div>
-    <div class="fact"><dt>Cheapest and dearest date today</dt><dd>₹{{ latest.low|inr }} <small>to</small> ₹{{ latest.high|inr }}</dd></div>
-    <div class="fact"><dt>Based on</dt><dd>{{ latest.dates }} <small>departure dates, priced {{ latest.collection_date|day_month }}</small></dd></div>
-  </dl>
-  {% endif %}
 </section>
+{% endblock %}
+{% block main %}
+{% if latest %}
+<section class="section wrap section-tight" aria-label="Today in numbers">
+  <dl class="facts">
+    <div class="fact"><dt>Usual range, last 90 days</dt><dd>{% if verdict.low %}₹{{ verdict.low|inr }}–₹{{ verdict.high|inr }}{% else %}<small>Building up</small>{% endif %}</dd></div>
+    <div class="fact"><dt>Cheapest and dearest date</dt><dd>₹{{ latest.low|inr }} <small>to</small> ₹{{ latest.high|inr }}</dd></div>
+    <div class="fact"><dt>Based on</dt><dd>{{ latest.dates }} <small>departure dates, seen {{ latest.collection_date|day_month }}</small></dd></div>
+  </dl>
+</section>
+{% endif %}
 
 <section class="section wrap" aria-labelledby="h-history">
   <div class="controls">
-    <h2 id="h-history" class="small muted" style="font-size:var(--step-1);color:var(--ink)">How fares have moved</h2>
+    <h2 id="h-history">How fares have moved</h2>
     <nav class="segments" aria-label="Time range">
       {% for key, label in [("90", "90 days"), ("365", "1 year"), ("all", "All")] %}
       <a href="?w={{ window }}&range={{ key }}" {% if key == span %}aria-current="true"{% endif %}>{{ label }}</a>

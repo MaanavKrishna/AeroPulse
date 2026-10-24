@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 {% block title %}API guide | AeroPulse{% endblock %}
+{% block heading %}API{% endblock %}
+{% block lede %}<p class="lede">Read-only JSON over HTTPS. No key, no sign-up. {{ settings.rate_limit }} requests a minute per address; the response headers tell you how many you have left.</p>{% endblock %}
 {% block main %}
-<section class="page-head wrap">
-  <h1>API</h1>
-  <p>Read-only JSON over HTTPS. No key, no sign-up. {{ settings.rate_limit }} requests a minute per address; the response headers tell you how many you have left.</p>
-</section>
+<div class="ground-pad"></div>
 <div class="wrap">
   <article class="prose">
     <h2>Quick start</h2>

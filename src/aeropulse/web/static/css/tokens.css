@@ -1,6 +1,8 @@
-/* AeroPulse design tokens. "Fare weather": a cool sky, ink, and one diverging scale from
-   blue (cheaper than usual) to vermilion (dearer than usual). Blue/orange stays readable
-   for colour-blind readers; colour is never the only signal. */
+/* AeroPulse design tokens: "night flight".
+   Every page starts in a twilight sky (the .sky band) and comes down through a horizon to
+   the ground, where the numbers live. One diverging scale runs through both: blue for
+   cheaper than usual, vermilion for dearer. Blue/orange stays readable for colour-blind
+   readers, and colour is never the only signal. */
 
 @layer tokens, base, layout, components, utilities;
 
@@ -45,31 +47,39 @@
   :root {
     color-scheme: light;
 
-    /* Surfaces and ink */
-    --sky: #f2f5f8;
-    --sky-deep: #e6ebf1;
+    /* Ground: where the reading happens */
+    --ground: #f3f5fa;
+    --ground-deep: #e8ecf5;
     --surface: #ffffff;
-    --ink: #16202c;
-    --ink-muted: #5a6676;
-    --rule: #d6dde5;
-    --rule-strong: #b7c1cd;
-    --band: #d7dde5;
+    --ink: #10162e;
+    --ink-muted: #586079;
+    --rule: #dde2ee;
+    --rule-strong: #bcc4d6;
+    --band: #dce1ec;
 
-    /* Interaction */
-    --accent: #3036a0;
+    --accent: #3b44c4;
     --accent-ink: #ffffff;
-    --accent-soft: #e4e5f6;
-    --focus: #3036a0;
+    --focus: #3b44c4;
 
-    /* The fare scale: cheap ... usual ... dear */
-    --r-cool-2: #1d6fa5;
-    --r-cool-1: #6fa3c7;
-    --r-even: #b4bdc9;
-    --r-warm-1: #dd8a70;
-    --r-warm-2: #c4492c;
-    /* Text-safe versions (4.5:1 on --sky) */
-    --cool-ink: #1a6497;
-    --warm-ink: #a93a20;
+    /* The fare scale on the ground: cheaper ... usual ... dearer */
+    --r-cool-2: #1c6cb0;
+    --r-cool-1: #73a7d3;
+    --r-even: #b3bacb;
+    --r-warm-1: #e39477;
+    --r-warm-2: #c2461f;
+    --cool-ink: #17609e;
+    --warm-ink: #a93a18;
+    --warm: #ff8a5b;
+
+    /* The sky: always night, in both themes */
+    --night: #070c24;
+    --dusk: #121a52;
+    --twilight: #2b2c78;
+    --glow: #e9a37c;
+    --sky-ink: #eef1ff;
+    --sky-muted: #a9b1da;
+    --sky-rule: rgb(255 255 255 / 0.13);
+    --sky-glass: rgb(255 255 255 / 0.06);
 
     /* Type */
     --font-ui: "Anek Latin", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -77,66 +87,88 @@
     --step--1: 0.84rem;
     --step-0: 1rem;
     --step-1: 1.2rem;
-    --step-2: clamp(1.35rem, 1.1rem + 0.9vw, 1.56rem);
-    --step-3: clamp(1.6rem, 1.25rem + 1.4vw, 1.95rem);
-    --step-4: clamp(2rem, 1.4rem + 2.4vw, 2.75rem);
-    --step-5: clamp(2.6rem, 1.2rem + 5.6vw, 4.75rem);
+    --step-2: clamp(1.35rem, 1.1rem + 0.9vw, 1.6rem);
+    --step-3: clamp(1.65rem, 1.25rem + 1.5vw, 2.1rem);
+    --step-4: clamp(2.1rem, 1.4rem + 2.8vw, 3.1rem);
+    --step-5: clamp(2.6rem, 1.3rem + 5.2vw, 4.6rem);
+    --step-6: clamp(3.2rem, 1.6rem + 6.4vw, 6rem);
 
     /* Space (4px grid) */
     --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.5rem;
-    --s-6: 2rem; --s-7: 3rem; --s-8: 4rem; --s-9: 6rem;
+    --s-6: 2rem; --s-7: 3rem; --s-8: 4.5rem; --s-9: 6.5rem;
 
-    --page: 75rem;
+    --page: 78rem;
     --measure: 68ch;
-    --gutter: clamp(1rem, 0.6rem + 2vw, 2rem);
-    --radius-input: 8px;
-    --dur: 180ms;
+    --gutter: clamp(1rem, 0.5rem + 2.2vw, 2.25rem);
+    --radius-s: 8px;
+    --radius-m: 14px;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  /* Inside the sky, charts and text switch to their night palette automatically. */
+  .sky, .site-foot {
+    color-scheme: dark;
+    --ink: var(--sky-ink);
+    --ink-muted: var(--sky-muted);
+    --rule: var(--sky-rule);
+    --rule-strong: rgb(255 255 255 / 0.24);
+    --band: rgb(169 177 218 / 0.16);
+    --surface: rgb(255 255 255 / 0.07);
+    --accent: #a8b2ff;
+    --accent-ink: #070c24;
+    --focus: #c3c9ff;
+    --r-cool-2: #59b8ff;
+    --r-cool-1: #3f7fb8;
+    --r-even: #7d86b8;
+    --r-warm-1: #c97a62;
+    --r-warm-2: #ff8a5b;
+    --cool-ink: #8fd0ff;
+    --warm-ink: #ffab8a;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --sky: #0e1522;
-      --sky-deep: #131c2c;
-      --surface: #151e2e;
-      --ink: #e5eaf1;
-      --ink-muted: #93a0b2;
-      --rule: #243049;
-      --rule-strong: #34425e;
-      --band: #26324a;
-      --accent: #9ba2ff;
-      --accent-ink: #0e1522;
-      --accent-soft: #232a52;
-      --focus: #b5baff;
-      --r-cool-2: #5fa8db;
-      --r-cool-1: #3d6f95;
-      --r-even: #4a566b;
-      --r-warm-1: #a65a45;
-      --r-warm-2: #f07a5a;
-      --cool-ink: #7cb8e3;
-      --warm-ink: #f39477;
+      --ground: #0b1022;
+      --ground-deep: #10172f;
+      --surface: #131b37;
+      --ink: #e8ecfa;
+      --ink-muted: #98a1c4;
+      --rule: #222b4d;
+      --rule-strong: #34406a;
+      --band: #252e52;
+      --accent: #a8b2ff;
+      --accent-ink: #070c24;
+      --focus: #c3c9ff;
+      --r-cool-2: #59b8ff;
+      --r-cool-1: #3f7fb8;
+      --r-even: #59628f;
+      --r-warm-1: #b56f58;
+      --r-warm-2: #ff8a5b;
+      --cool-ink: #8fd0ff;
+      --warm-ink: #ffab8a;
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --sky: #0e1522;
-    --sky-deep: #131c2c;
-    --surface: #151e2e;
-    --ink: #e5eaf1;
-    --ink-muted: #93a0b2;
-    --rule: #243049;
-    --rule-strong: #34425e;
-    --band: #26324a;
-    --accent: #9ba2ff;
-    --accent-ink: #0e1522;
-    --accent-soft: #232a52;
-    --focus: #b5baff;
-    --r-cool-2: #5fa8db;
-    --r-cool-1: #3d6f95;
-    --r-even: #4a566b;
-    --r-warm-1: #a65a45;
-    --r-warm-2: #f07a5a;
-    --cool-ink: #7cb8e3;
-    --warm-ink: #f39477;
+    --ground: #0b1022;
+    --ground-deep: #10172f;
+    --surface: #131b37;
+    --ink: #e8ecfa;
+    --ink-muted: #98a1c4;
+    --rule: #222b4d;
+    --rule-strong: #34406a;
+    --band: #252e52;
+    --accent: #a8b2ff;
+    --accent-ink: #070c24;
+    --focus: #c3c9ff;
+    --r-cool-2: #59b8ff;
+    --r-cool-1: #3f7fb8;
+    --r-even: #59628f;
+    --r-warm-1: #b56f58;
+    --r-warm-2: #ff8a5b;
+    --cool-ink: #8fd0ff;
+    --warm-ink: #ffab8a;
   }
 }
